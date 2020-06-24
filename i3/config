@@ -1,0 +1,121 @@
+# SETTINGS
+set $mod Mod4
+focus_follows_mouse no
+
+# COLORS (~/.Xresources)
+set_from_resource	  $background	background
+set_from_resource	  $foreground	foreground
+set_from_resource	  $color0		  color0
+set_from_resource 	$color1 	  color1
+set_from_resource 	$color2 	  color2
+set_from_resource 	$color3 	  color3
+set_from_resource 	$color4 	  color4
+set_from_resource 	$color5 	  color5
+set_from_resource 	$color6		  color6
+set_from_resource	  $color7		  color7
+set_from_resource	  $color8		  color8
+set_from_resource	  $color9		  color9
+set_from_resource	  $color10	  color10
+set_from_resource	  $color11	  color11
+set_from_resource	  $color12	  color12
+set_from_resource	  $color13	  color13
+set_from_resource	  $color14	  color14
+set_from_resource	  $color15	  color15
+
+# THEME
+gaps inner 25
+gaps outer -15
+default_border pixel 5
+default_floating_border pixel 3
+font pango:Metropolis Bold 10
+client.background	      $background
+client.focused         	$background $background $foreground $color4     $background
+client.unfocused       	$background	$background	$foreground	$background	$background
+client.focused_inactive	$background	$background	$foreground	$background	$background
+client.urgent		        $color9   	$background	$foreground	$color1   	$background
+client.placeholder	    $background	$background	$foreground	$background	$background
+for_window [class="^.*"] border pixel 0
+for_window [class="."] focus
+
+# STARTUP
+exec_always --no-startup-id $HOME/.config/i3/startup/all.sh &
+
+# RESTART/EXIT/LOCK
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+q exec i3-msg exit
+bindsym $mod+Shift+l exec xautolock -locknow
+
+# APPS
+bindsym $mod+Return exec urxvt
+bindsym $mod+w exec brave-beta
+bindsym $mod+q kill
+bindsym $mod+f exec nautilus
+bindsym $mod+c exec code
+bindsym $mod+space exec rofi -show drun -theme config-global
+bindsym Mod1+Tab exec rofi -show window -theme config-switcher
+
+# FOCUS
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+bindsym $mod+Up focus up
+bindsym $mod+Down focus Down
+
+# SPLIT
+bindsym $mod+h split h; exec notify-send "Split Horizontal"
+bindsym $mod+v split v; exec notify-send "Split Vertical"
+
+# MOVE
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Down move Down
+
+# RESIZE
+bindsym $mod+bracketright resize grow width 2 px or 2 ppt
+bindsym $mod+bracketleft resize shrink width 2 px or 2 ppt
+bindsym $mod+minus resize shrink height 2 px or 2 ppt
+bindsym $mod+equal resize grow height 2 px or 2 ppt
+bindsym $mod+Control+bracketright gaps inner all plus 2
+bindsym $mod+Control+bracketleft gaps inner all minus 2
+bindsym $mod+Control+minus gaps outer all minus 2
+bindsym $mod+Control+equal gaps outer all plus 2
+
+# LAYOUTS
+floating_modifier $mod
+bindsym $mod+Shift+f fullscreen
+bindsym $mod+backslash floating toggle
+
+# WORKSPACES
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+period move workspace to output right
+bindsym $mod+comma move workspace to output left
+workspace 1 output eDP-1 HDMI-1
+workspace 2 output eDP-1 HDMI-1
+workspace 3 output eDP-1 HDMI-1
+workspace 4 output HDMI-1 eDP-1
+workspace 5 output HDMI-1 eDP-1
+workspace 6 output eDP-1 HDMI-1
+workspace 7 output HDMI-1 eDP-1
+
+# ASSIGNMENTS
+for_window [window_role="browser"] move to workspace 1, focus
+for_window [class="Slack"] move to workspace 2, focus
+for_window [class="discord"] move to workspace 2, focus
+for_window [class="Steam"] move to workspace 3, focus
+for_window [class="RocketLeague"] move to workspace 3, focus
+for_window [class="Google-chrome"] move to workspace 3, focus
+for_window [class="Code"] move to workspace 4, focus
+for_window [class="Spotify"] move to workspace 5, focus

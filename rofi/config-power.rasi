@@ -1,0 +1,55 @@
+configuration {
+  location: 0;
+  show-icons: true;
+  font: "Poppins Light 20";
+  fullscreen: true;
+}
+
+* {
+  background-color: transparent;
+}
+
+#window {
+  padding: 300px 700px;
+  background-color: rgba(201,221,252,0.9);
+}
+
+#mainbox {
+  background-color: transparent;
+  width: 200px;
+}
+
+inputbar {
+  border: 00;
+  children: [prompt,entry];
+}
+
+prompt {
+  padding: 10px;
+  border: 00;
+}
+
+textbox {
+  background-color: #bfd2ef;
+  border: 0;
+  padding: 10px;
+}
+
+entry {
+  padding: 10px;
+}
+
+listview {
+  cycle: true;
+  margin: 0;
+  scrollbar: false;
+}
+
+element {
+  border: 0;
+  padding: 10px;
+}
+
+element selected {
+  background-color: #bfd2ef;
+}

@@ -1,0 +1,57 @@
+configuration {
+  lines: 6;
+  location: 0;
+  show-icons: true;
+  font: "Poppins Light 10";
+  columns: 6;
+  bw: 0;
+  hide-scrollbar: true;
+  display-drun: "󱓞";
+  display-combi: "󱓞";
+}
+
+* {
+  background-color: #c9ddfc;
+  text-color: #011627;
+  spacing: 0;
+}
+
+inputbar {
+  border: 0;
+  children: [prompt,entry];
+  display: none;
+}
+
+prompt {
+  padding: 10px;
+  border: 0;
+  display: none;
+  height: 0px;
+}
+
+textbox {
+  background-color: #bfd2ef;
+  border: 0;
+  padding: 10px;
+  display: none;
+  height: 0px;
+}
+
+entry {
+  padding: 10px;
+}
+
+listview {
+  cycle: true;
+  margin: 0;
+  scrollbar: false;
+}
+
+element {
+  border: 0;
+  padding: 10px;
+}
+
+element selected {
+  background-color: #bfd2ef;
+}

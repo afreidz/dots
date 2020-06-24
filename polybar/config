@@ -1,0 +1,301 @@
+[settings]
+screenchange-reload = true
+
+[colors]
+text = ${xrdb:foreground}
+bg = ${xrdb:background}
+1a = ${xrdb:color0}
+1b = ${xrdb:color8}
+2a = ${xrdb:color1}
+2b = ${xrdb:color9}
+3a = ${xrdb:color2}
+3b = ${xrdb:color10}
+4a = ${xrdb:color3}
+4b = ${xrdb:color11}
+5a = ${xrdb:color4}
+5b = ${xrdb:color12}
+6a = ${xrdb:color5}
+6b = ${xrdb:color13}
+7a = ${xrdb:color6}
+7b = ${xrdb:color14}
+8a = ${xrdb:color7}
+8b = ${xrdb:color15}
+
+[vars]
+size = 30
+spacer = 45
+offset = 10
+
+
+[bar/spacer1]
+monitor=${env:MONITOR_PRIMARY}
+height = ${vars.spacer}
+width = 100%
+background = #00000000
+modules-center = spacer
+font-0 = "Poppins:pixelsize=0"
+[bar/spacer2]
+monitor=${env:MONITOR_SECONDARY}
+height = ${vars.spacer}
+width = 100%
+background = #00000000
+modules-center = spacer
+font-0 = "Poppins:pixelsize=0"
+[module/spacer]
+type=custom/text
+content=" "
+
+
+[bar/power]
+monitor=${env:MONITOR_SECONDARY}
+width = ${vars.size}
+height = ${vars.size}
+offset-y = ${vars.offset}
+offset-x = 100%:-40
+fixed-center = true
+background = ${colors.2b}
+foreground = ${colors.text}
+override-redirect = true
+modules-center = powermenu
+font-0 = "MaterialDesignIconsDesktop:pixelsize=20;4"
+font-1 = "Poppins:pixelsize=10"
+[module/powermenu]
+type=custom/text
+click-left=exec $HOME/.config/rofi/power.sh
+content="%{T3}󰐥%{T-}"
+
+
+[bar/datetime1]
+monitor=${env:MONITOR_SECONDARY}
+width = 233
+height = ${vars.size}
+offset-y = ${vars.offset}
+offset-x = 100%:-285
+fixed-center = true
+module-margin-right = 2
+background = ${colors.8a}
+override-redirect = true
+modules-center = date time
+font-0 = "Poppins:weight=SemiBold:pixelsize=10;1"
+font-1 = "MaterialDesignIconsDesktop:pixelsize=10;2"
+font-2 = "MaterialDesignIconsDesktop:pixelsize=10;3"
+[bar/datetime2]
+monitor=${env:MONITOR_PRIMARY}
+height = ${vars.size}
+width = 233
+offset-y = ${vars.offset}
+offset-x = 100%:-243
+fixed-center = true
+module-margin-right = 2
+background = ${colors.8a}
+override-redirect = true
+modules-center = date time
+font-0 = "Poppins:weight=SemiBold:pixelsize=10;1"
+font-1 = "MaterialDesignIconsDesktop:pixelsize=10;2"
+font-2 = "MaterialDesignIconsDesktop:pixelsize=10;3"
+[module/date]
+type=custom/script
+interval=60.0
+exec=date +"%{T3}󰸗 %{T1} %a %d %b, %Y%{T-}"
+label-foreground=${colors.1a}
+click-left=exec gnome-calendar &
+click-right=exec gnome-weather &
+[module/time]
+type=custom/script
+interval=60.0
+exec=date +"%{T2}󰅐 %{T1} %I:%M %p%{T-}"
+label-foreground=${colors.5a}
+click-left=exec gnome-calendar &
+click-right=exec gnome-weather &
+
+
+[bar/system1]
+monitor=${env:MONITOR_PRIMARY}
+height = ${vars.size}
+width = 160
+offset-y = ${vars.offset}
+offset-x = 100%:-413
+fixed-center = true
+module-margin-right = 5
+background = ${colors.bg}
+override-redirect = true
+modules-center = wifi ram volume
+font-0 = "Poppins:weight=SemiBold:pixelsize=10;1"
+font-1 = "MaterialDesignIconsDesktop:pixelsize=10;2"
+[bar/system2]
+monitor=${env:MONITOR_SECONDARY}
+height = ${vars.size}
+width = 160
+offset-y = ${vars.offset}
+offset-x = 100%:-455
+fixed-center = true
+module-margin-right = 5
+background = ${colors.bg}
+override-redirect = true
+modules-center = wifi ram volume
+font-0 = "Poppins:weight=SemiBold:pixelsize=10;1"
+font-1 = "MaterialDesignIconsDesktop:pixelsize=10;2"
+[module/wifi]
+type=internal/network
+interface=wlp3s0
+interval=3
+label-foreground=${colors.text}
+label-connected="%{T2}󰖩%{T-}"
+label-disconnected="%{T2}󰖪%{T-}"
+[module/volume]
+type=custom/script
+interval=1
+label-foreground=${colors.text}
+click-left=exec pavucontrol &
+click-right=pamixer -t
+scroll-up=pamixer -i 3
+scroll-down=pamixer -d 3
+exec=[[ $(pamixer --get-mute) == true ]] && echo >&2 "%{T2}󰝟 %{T1} mute%{T-}" || echo >&2 "%{T2}󰕾 %{T1} $(pamixer --get-volume)%%{T-}"
+[module/ram]
+type=custom/script
+interval=5
+label-foreground=${colors.text}
+click-left=exec gnome-system-monitor &
+exec=free -m | awk 'NR==2{printf "%{T2} 󰍛 %{T1} %.0f%%%{T-}", $3*100/$2 }'
+
+
+[bar/launch]
+monitor=${env:MONITOR_PRIMARY}
+width = 30
+height = ${vars.size}
+offset-y = ${vars.offset}
+offset-x = 10
+fixed-center = true
+background = ${colors.8a}
+foreground = ${colors.1a}
+override-redirect = true
+font-0 = "MaterialDesignIconsDesktop:pixelsize=15;4"
+font-1 = "Poppins:pixelsize=10"
+modules-center = launch
+[module/launch]
+type=custom/text
+click-left=exec rofi -show drun -m primary -theme config-launcher
+content="%{T1}󰣇%{T-}"
+
+
+[bar/utilities]
+monitor=${env:MONITOR_PRIMARY}
+height = ${vars.size}
+width = 100
+offset-y = ${vars.offset}
+offset-x = 50%:-50
+fixed-center = true
+module-margin-right = 2
+background = ${colors.8a}
+foreground = ${colors.1a}
+override-redirect = true
+font-0 = "MaterialDesignIconsDesktop:pixelsize=15;4"
+font-1 = "Poppins:pixelsize=10"
+modules-center = wallpaper theme
+[module/wallpaper]
+type=custom/text
+content="󰸉"
+click-left=exec nitrogen &
+[module/theme]
+type=custom/text
+content="󰉼"
+click-left=exec lxappearance &
+# [module/notification]
+# type=custom/text
+# content="󰉺"
+# click-left=exec kill -s USR1 $(pidof deadd-notification-center)
+# [module/colorpicker]
+# type = custom/text
+# content="%{A:1=colorpicker --short --one-shot | xsel -b:}󰈋%{A}"
+
+
+[bar/music]
+monitor=${env:MONITOR_SECONDARY}
+height = ${vars.size}
+width = 250
+offset-y = ${vars.offset}
+offset-x = 50%:-125
+fixed-center = true
+module-margin-right = 1
+background = ${colors.8a}
+foreground = ${colors.1a}
+override-redirect = true
+font-0 = "MaterialDesignIconsDesktop:pixelsize=15;4"
+font-1 = "Poppins:pixelsize=10"
+modules-left = spotify nowplaying
+[module/spotify]
+type=custom/text
+content = "%{A1:i3-msg workspace 5:} 󰓇%{A}"
+[module/nowplaying]
+interval = 1
+type = custom/script
+exec = python $HOME/.config/polybar/spotify.py -t 25 -f '{artist}: {song}'
+
+[bar/workspaces1]
+monitor=${env:MONITOR_PRIMARY}
+height = ${vars.size}
+width = 220
+offset-y = ${vars.offset}
+offset-x = 50
+fixed-center = true
+background = ${colors.bg}
+foreground = ${colors.text}
+override-redirect = true
+font-0 = "MaterialDesignIconsDesktop:pixelsize=15;4"
+font-1 = "Poppins:pixelsize=10"
+modules-center = ws-web ws-chat ws-games ws-code ws-music ws-6 ws-7
+[bar/workspaces2]
+monitor=${env:MONITOR_SECONDARY}
+height = ${vars.size}
+width = 220
+offset-y = ${vars.offset}
+offset-x = ${vars.offset}
+fixed-center = true
+background = ${colors.bg}
+foreground = ${colors.text}
+override-redirect = true
+font-0 = "MaterialDesignIconsDesktop:pixelsize=15;4"
+font-1 = "Poppins:pixelsize=10"
+modules-center = ws-web ws-chat ws-games ws-code ws-music ws-6 ws-7
+
+[module/ws-web]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.5b}
+content = "%{A1:i3-msg workspace 1:}󰖟%{A}"
+
+[module/ws-chat]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.4b}
+content = "%{A1:i3-msg workspace 2:}󱋊%{A}"
+
+[module/ws-games]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.6b}
+content = "%{A1:i3-msg workspace 3:}󰺷%{A}"
+
+[module/ws-code]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.3b}
+content = "%{A1:i3-msg workspace 4:}󰅴%{A}"
+
+[module/ws-music]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.2b}
+content = "%{A1:i3-msg workspace 5:}󰝚%{A}"
+
+[module/ws-6]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.8a}
+content = "%{A1:i3-msg workspace 6:}󰐾%{A}"
+
+[module/ws-7]
+type=custom/text
+content-padding = 2
+content-foreground = ${colors.8a}
+content = "%{A1:i3-msg workspace 7:}󰐾%{A}"
