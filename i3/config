@@ -43,7 +43,6 @@ exec_always --no-startup-id $HOME/.config/i3/startup/all.sh &
 # RESTART/EXIT/LOCK
 bindsym $mod+Shift+r restart
 bindsym $mod+Shift+q exec i3-msg exit
-bindsym $mod+Shift+l exec xautolock -locknow
 
 # APPS
 bindsym $mod+Return exec urxvt

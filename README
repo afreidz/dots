@@ -1,0 +1,41 @@
+# DOTS
+
+## DEPS
+- pkill
+- polybar
+- killall
+- pgrep
+- picom-rounded-corners (AUR)
+- xrandr
+- grep
+- cut
+- wc
+- pip
+- spotify-cli-linux (pip)
+- dunst
+- xidlehook
+- awk
+- print
+- imagemagik (convert, composite)
+- i3lock
+- systemctl
+- nitrogen
+- i3-gaps
+- rofi
+- Poppins Font
+- Material Design Icons Desktop (AUR)
+- date
+- pamixer
+- free
+- lxappearance
+- spicetify
+
+
+## OPTIONAL
+- pavucontrol
+- urxvt
+- brave-beta-bin (AUR)
+- nautilus
+- vscode
+- gnome-calendar
+- gnome-weather
