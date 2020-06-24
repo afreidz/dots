@@ -1,0 +1,46 @@
+! special
+*.foreground:   #ffffff
+*.background:   #011627
+*.cursorColor:  #ffffff
+
+! black
+*.color0:       #01070d
+*.color8:       #010e1a
+
+! red
+*.color1:       #b31962
+*.color9:       #e01f7a
+
+! green
+*.color2:       #1dad92
+*.color10:      #21c7a8
+
+! yellow
+*.color3:       #ffa800
+*.color11:      #ffd101
+
+! blue
+*.color4:       #7194de
+*.color12:      #82aaff
+
+! magenta
+*.color5:       #a748a3
+*.color13:      #d15acc
+
+! cyan
+*.color6:       #73e0e5
+*.color14:      #b1f7f9
+
+! white
+*.color7:       #bfd2ef
+*.color15:      #c9ddfc
+
+
+! URxvt SETTINGS
+URxvt.letterSpace: -1
+URxvt.scrollBar: false
+URxvt.internalBorder: 20
+URxvt.clipboard.autocopy: true
+URxvt.keysym.Control-Shift-V: perl:pasta:paste
+URxvt.perl-ext-common: selection-to-clipboard,pasta
+URxvt.font: xft:OperatorMonoLig:size=12:weight=bold,xft:FontAwesome:size=12
