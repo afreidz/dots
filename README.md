@@ -1,6 +1,7 @@
 # DOTS
+My "dotfiles" for i3-gaps on Linux
 
-## DEPS
+## DEPS USED IN THIS CONFIG
 - pkill
 - polybar
 - killall
@@ -19,23 +20,26 @@
 - imagemagik (convert, composite)
 - i3lock
 - systemctl
-- nitrogen
 - i3-gaps
 - rofi
-- Poppins Font
-- Material Design Icons Desktop (AUR)
 - date
 - pamixer
 - free
-- lxappearance
 - spicetify
 
 
-## OPTIONAL
+## BINARIES USED IN THIS CONFIG
+- nitrogen
 - pavucontrol
+- lxappearance
 - urxvt
 - brave-beta-bin (AUR)
 - nautilus
 - vscode
 - gnome-calendar
 - gnome-weather
+
+
+## FONTS USED IN THIS CONFIG
+- Material Design Icons Desktop (AUR)
+- Poppins Font
