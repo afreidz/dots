@@ -6,17 +6,19 @@ glx-no-rebind-pixmap = true;
 
 # RADIUS
 corner-radius = 7;
-rounded-corners-exclude = [
+rounded-corners = [
     "name = 'polybar'",
 ]
 
 # SHADOWS
 shadow = false;
-shadow-radius = 10;
-shadow-offset-x = -10;
-shadow-offset-y = -8;
-shadow-opacity = 0.4;
-shadow-ignore-shaped = false;
+no-dnd-shadow = true;
+no-dock-shadow = true;
+clear-shadow = true;
+shadow-radius = 5;
+shadow-offset-x = -2;
+shadow-offset-y = -2;
+shadow-opacity = 0.15;
 shadow-exclude = [
     "class_g = 'Ulauncher'",
     "class_g = 'polybar'",
