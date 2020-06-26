@@ -26,6 +26,7 @@ My "dotfiles" for i3-gaps on Linux
 - pamixer
 - free
 - spicetify
+- nmcli
 
 
 ## BINARIES USED IN THIS CONFIG
@@ -38,6 +39,7 @@ My "dotfiles" for i3-gaps on Linux
 - vscode
 - gnome-calendar
 - gnome-weather
+- nm-connection-editor
 
 
 ## FONTS USED IN THIS CONFIG

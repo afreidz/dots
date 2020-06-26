@@ -15,7 +15,7 @@ composite -gravity center -geometry 200x200+0+0 /tmp/user.png /tmp/wall.png /tmp
 
 xidlehook \
   --not-when-audio \
-  --timer 120 \
+  --timer 360 \
   'i3lock -i /tmp/lock.png -ubte' \
   '' \
   --timer 60 \

@@ -140,8 +140,8 @@ type=internal/network
 interface=wlp3s0
 interval=3
 label-foreground=${colors.text}
-label-connected="%{T2}󰖩%{T-}"
-label-disconnected="%{T2}󰖪%{T-}"
+label-connected="%{A1:nm-connection-editor:}%{T2}󰖩%{T-}%{A}"
+label-disconnected="%{A1:nm-connection-editor:}%{T2}󰖪%{T-}%{A}"
 [module/volume]
 type=custom/script
 interval=1
