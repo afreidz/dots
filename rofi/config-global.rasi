@@ -4,7 +4,7 @@ configuration {
   yoffset: 54;
   xoffset: 9;
   show-icons: true;
-  font: "Poppins Light 15";
+  font: "Poppins Light 10";
   columns: 1;
   bw: 0;
   hide-scrollbar: true;
@@ -19,14 +19,11 @@ configuration {
 }
 
 #window {
-  padding: 20px;
-  background-color: rgba(1,22,39,0.7);
   border-radius: 7px;
 }
 
 #mainbox {
-  border-radius: 7px;
-  background-color: #011627;
+  padding: 10px;
 }
 
 inputbar {

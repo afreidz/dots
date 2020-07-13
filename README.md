@@ -3,7 +3,6 @@ My "dotfiles" for i3-gaps on Linux
 
 ## DEPS USED IN THIS CONFIG
 - pkill
-- polybar
 - killall
 - pgrep
 - picom-rounded-corners (AUR)
@@ -20,7 +19,7 @@ My "dotfiles" for i3-gaps on Linux
 - imagemagik (convert, composite)
 - i3lock
 - systemctl
-- i3-gaps
+- awesomewm
 - rofi
 - date
 - pamixer
@@ -35,10 +34,8 @@ My "dotfiles" for i3-gaps on Linux
 - lxappearance
 - urxvt
 - brave-beta-bin (AUR)
-- nautilus
+- thunar
 - vscode
-- gnome-calendar
-- gnome-weather
 - nm-connection-editor
 
 
