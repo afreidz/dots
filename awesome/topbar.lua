@@ -3,6 +3,7 @@ local wibox = require('wibox');
 local gears = require('gears');
 local naughty = require('naughty');
 local beautiful = require('beautiful');
+local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
 local vars = require('helpers.vars');
 
@@ -21,17 +22,6 @@ local wifi_widgets = {};
 local pac_widgets = {};
 local mem_widgets = {};
 local vol_widgets = {};
-
-function rounded()
-  return function(c,w,h) gears.shape.rounded_rect(c,w,h,r) end
-end
-
-function frost()
-  local container = wibox.container.background();
-  container.bg = f;
-  container.shape = rounded();
-  return container;
-end
 
 function make_launcher(s)
   local container = wibox({ 
@@ -106,7 +96,7 @@ function make_power(s)
 end
 
 function make_date(s)
-  local dw = 130;
+  local dw = 160;
   local date = wibox({
     type = "dock",
     width = dw,
@@ -118,9 +108,9 @@ function make_date(s)
   });
 
   local clock = wibox.widget.textclock();
-  clock.font = "Poppins SemiBold 9";
+  clock.font = "Poppins SemiBold 12";
   clock.refresh = 60;
-  clock.format = '%a, %b %-d   <span font="Poppins Medium 9">%-I:%M %p</span>';
+  clock.format = '%a, %b %-d   <span font="Poppins Light 12">%-I:%M %p</span>';
 
   date.x = ((s.workarea.width - (w+m+m)) + s.workarea.x) - dw;
   date.y = m;
@@ -131,6 +121,16 @@ function make_date(s)
     valign = "center",
     clock,
   };
+
+  date:buttons(gears.table.join(awful.button({ }, 1, function()
+    if not s.hub.visible then
+      s.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
+      s.hub.visible = true;
+      s.hub.enable_view_by_index(2);
+    else
+      s.hub.visible = false;
+    end
+  end)));
 
   return date;
 end
@@ -168,7 +168,12 @@ function make_utility(s)
   local vol = make_icon("󰕾");
   local pac = make_icon("󰏗");
   local mem = make_icon("󰍛");
-  --local bat = make_icon("󰁽");
+
+  wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
+  bt.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
+  vol.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(6) end)));
+  pac.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
+  mem.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
 
   table.insert(wifi_widgets, { icon = wifi.text });
   table.insert(pac_widgets, { icon = pac.widget });
@@ -183,7 +188,9 @@ function make_utility(s)
   sep.font = "Poppins 14";
   sep.opacity = 0.2;
 
-  local container = frost();
+  local container = wibox.container.background();
+  container.bg = f;
+  container.shape = rounded();
   container:setup {
     layout = wibox.container.margin,
     left = m,
@@ -197,9 +204,14 @@ function make_utility(s)
   utility:struts({ top = h + m });
   utility.y = m;
   utility.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;
-  utility:buttons(gears.table.join(
-    awful.button({ }, 1, function() s.hub.visible = not s.hub.visible end)
-  ));
+  utility:buttons(gears.table.join(awful.button({ }, 1, function()
+    if not s.hub.visible then
+      s.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
+      s.hub.visible = true;
+    else
+      s.hub.visible = false;
+    end
+  end)));
 
   utility:setup {
     layout = wibox.container.margin,
@@ -210,65 +222,6 @@ function make_utility(s)
   return utility;
 end
 
-function increase_volume(vol)
-  if(muted) then return end;
-  v=v+2;
-  local cmd = 'pamixer -i 2';
-  awful.spawn.with_shell(cmd);
-  vol:set_value(v);
-end
-
-function decrease_volume(vol)
-  if(muted) then return end;
-  v=v-2;
-  local cmd = 'pamixer -d 2';
-  awful.spawn.with_shell(cmd);
-  vol:set_value(v);
-end
-
-function launch_volume_app(hub)
-  hub.visible = false;
-  return awful.spawn("pavucontrol");
-end
-
-function launch_stat_app(hub)
-  hub.visible = false;
-  return awful.spawn("gnome-system-monitor");
-end
-
-function launch_wifi_app(hub)
-  hub.visible = false;
-  return awful.spawn("nm-connection-editor");
-end
-
-function make_progress_bar(title,initial)
-  local bw = 60;
-  local bh = 150;
-  local bb = '#00000033';
-
-  local title = wibox.widget.textbox(title);
-  title.font = "Poppins SemiBold 9";
-  title.valign = "center";
-  title.align = "center";
-  title.forced_height = h;
-
-  local progress = wibox.widget.progressbar();
-  progress.max_value = 100;
-  progress.background_color = bb;
-  progress.color = xrdb.foreground;
-  progress.value = initial;
-  progress.shape = rounded();
-
-  local bar = wibox.widget {
-    layout = wibox.container.rotate,
-    direction = "east",
-    forced_width = bw,
-    forced_height = bh,
-    progress,
-  }
-
-  return { bar = bar, title = title, p = progress };
-end
 
 function watch_wifi(widgets)
   local wi = '󰖪';
@@ -276,10 +229,8 @@ function watch_wifi(widgets)
   local cmd = 'bash -c "nmcli dev wifi list | awk \'/\\*/{if (NR!=1) {print $3}}\'"';
   awful.widget.watch(cmd, 3, function(w,o)
     if(o ~= '') then wi = '󰖩' else wi = '󰖪' end;
-    if(o ~= '') then wt = o else wt = 'wifi off' end;
     for k,w in pairs(widgets) do
       if(w.icon) then w.icon.text = wi end;
-      if(w.title) then w.title.text = wt end;
     end
   end);
 end
@@ -301,7 +252,6 @@ function watch_mem(widgets)
       c = r;
     end
     for k,w in pairs(widgets) do
-      if(w.p) then w.p:set_value(tonumber(o)); w.p.color = c; end;
       if(w.icon) then w.icon.fg = c end;
     end
   end);
@@ -315,9 +265,7 @@ function watch_pac(widgets)
   awful.widget.watch(sync_cmd, 60);
   awful.widget.watch(cmd, 10, function(w,o)
     if(o ~= '') then pc = '#7DF26F' else pc = xrdb.foreground end;
-    if(o ~= '') then pt = (o:gsub("^%s*(.-)%s*$", "%1")..' updates') else pt = 'no updates' end;
     for k,w in pairs(widgets) do
-      if(w.title) then w.title.text = pt end;
       if(w.icon) then w.icon.fg = pc end;
     end
   end);
@@ -339,14 +287,11 @@ function watch_vol(widgets)
   awful.widget.watch(vol_cmd, 2, function(w,o)
     if(muted) then
       for k,w in pairs(widgets) do
-        if(w.p) then w.p:set_value(0) end;
         if(w.icon) then w.icon.text = vm end;
-        if(w.title) then w.title.text = "Mute" end;
       end
     else
       for k,w in pairs(widgets) do
         v = tonumber(o);
-        if(w.p) then w.p:set_value(v) end;
         if(w.icon) then
           if(v < 50) then 
             i = v1;
@@ -357,149 +302,11 @@ function watch_vol(widgets)
           end
           w.icon.text = i; 
         end
-        if(w.title) then w.title.text = "Volume" end;
       end  
     end
   end);
 end
 
-function make_connection(i,title)
-  local cw = 90;
-  local ch = 90;
-  local ih = 40;
-  local bg = xrdb.color4;
-  local fg = xrdb.foreground;
-
-  local button = wibox.container.background();
-  button.bg = bg;
-  button.fg = fg
-  button.shape = rounded();
-  button.forced_width = cw;
-  button.forced_height = ch;
-
-  local container = wibox.container.margin();
-  container.margins = m;
-
-  local icon = wibox.widget.textbox(i);
-  icon.font = "MaterialDesignIconsDesktop 33";
-  icon.valign = "center";
-  icon.align = "center";
-  icon.forced_height = ih;
-
-  local title = wibox.widget.textbox(title);
-  title.font = "Poppins SemiBold 8";
-  title.valign = "center";
-  title.align = "center";
-
-  local layout = wibox.layout.fixed.vertical();
-  layout.spacing = m;
-  layout:add(icon);
-  layout:add(title);
-
-  button.widget = container;
-  container.widget = layout;
-
-  return { widget = button, icon = icon, title = title };
-end
-
-function make_hub(s)
-  local hw = 410;
-  local hh = 310;
-  local bb = '#00000033';
-  local wi = '󰖪';
-
-
-  local hub = wibox({
-    type = "toolbar",
-    width = hw,
-    height = hh,
-    screen = s,
-    ontop = true,
-    visible = false,
-    bg = t,
-    fg = b,
-  });
-
-  local vol = make_progress_bar('Volume', 0);
-  vol.bar:buttons(gears.table.join(
-    awful.button({ }, 1, function() launch_volume_app(hub) end),
-    awful.button({ }, 4, function() increase_volume(vol.p) end),
-    awful.button({ }, 5, function() decrease_volume(vol.p) end)
-  ));
-
-  local mem = make_progress_bar('Memory', 30);
-  mem.bar:buttons(gears.table.join(
-    awful.button({ }, 1, function() launch_stat_app(hub) end)
-  ));
-
-  local wifi = make_connection(wi, 'wifi off');
-  local pac = make_connection('󰏗', 'no updates');
-
-  table.insert(mem_widgets, mem);
-  table.insert(vol_widgets, vol);
-  table.insert(wifi_widgets, wifi);
-  table.insert(pac_widgets, { title = pac.title });
-
-  wifi.widget:buttons(gears.table.join(
-    awful.button({ }, 1, function() launch_wifi_app(hub) end)
-  ));
-
-  awful.widget.watch(vol_cmd, 1, function(w,o)
-    v = tonumber(o);
-    vol.p:set_value(v);
-  end);
-
-
-  local container = frost();
-  container:setup {
-    layout = wibox.layout.fixed.vertical,
-    {
-      layout = wibox.container.place,
-      halign = "center",
-      {
-        layout = wibox.layout.fixed.horizontal,
-        {
-          layout = wibox.container.margin,
-          margins = m,
-          {
-            layout = wibox.layout.align.vertical,
-            vol.title, vol.bar,
-          }
-        },
-        {
-          layout = wibox.container.margin,
-          margins = m,
-          {
-            layout = wibox.layout.align.vertical,
-            mem.title, mem.bar,
-          }
-        }
-      },
-    },
-    {
-      layout = wibox.container.margin,
-      left = m, right = m, top = m,
-      {
-        layout = wibox.layout.fixed.horizontal,
-        spacing = m,
-        wifi.widget, pac.widget,
-      }
-    }
-  };
-
-  hub.y = (h+m+(m/2));
-  hub.x = ((s.workarea.width / 2) - (hw/2)) + s.workarea.x;
-  hub.shape = rounded();
-  container.shape = rounded();
-
-  hub:setup {
-    layout = wibox.container.margin,
-    shape = rounded(),
-    container,
-  };
-
-  return hub;
-end
 
 function make_taglist(s)
   local container = wibox({
@@ -541,8 +348,6 @@ function make_taglist(s)
 end
 
 awful.screen.connect_for_each_screen(function(screen)
-
-  screen.hub = make_hub(screen);
   screen.date = make_date(screen);
   screen.power = make_power(screen);
   screen.tags = make_taglist(screen);

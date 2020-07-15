@@ -20,8 +20,8 @@
 *.color11:      #fdc400
 
 ! blue
-*.color4:       #016ee3
-*.color12:      #017afc
+*.color4:       #017EC0
+*.color12:      #1BBAEE
 
 ! magenta
 *.color5:       #e00267

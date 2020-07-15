@@ -75,6 +75,10 @@ bindsym $mod+bracketright resize grow width 2 px or 2 ppt
 bindsym $mod+bracketleft resize shrink width 2 px or 2 ppt
 bindsym $mod+minus resize shrink height 2 px or 2 ppt
 bindsym $mod+equal resize grow height 2 px or 2 ppt
+bindsym $mod+Shift+bracketright resize grow width 5 px or 5 ppt
+bindsym $mod+Shift+bracketleft resize shrink width 5 px or 5 ppt
+bindsym $mod+Shift+minus resize shrink height 5 px or 5 ppt
+bindsym $mod+Shift+equal resize grow height 5 px or 5 ppt
 bindsym $mod+Control+bracketright gaps inner all plus 2
 bindsym $mod+Control+bracketleft gaps inner all minus 2
 bindsym $mod+Control+minus gaps outer all minus 2
@@ -119,3 +123,5 @@ for_window [class="RocketLeague"] move to workspace 3, focus
 for_window [class="Google-chrome"] move to workspace 3, focus
 for_window [class="Code"] move to workspace 4, focus
 for_window [class="Spotify"] move to workspace 5, focus
+for_window [window_role="popup"] floating enable
+for_window [window_role="task_dialog"] floating enable

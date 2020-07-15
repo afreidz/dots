@@ -1,8 +1,11 @@
 local gears = require('gears');
 local awful = require('awful');
 local wibox = require('wibox');
-local beautiful = require('beautiful');
 local naughty = require('naughty');
+local vars = require('helpers.vars');
+local beautiful = require('beautiful');
+
+local hub = require('./hub')();
 require('awful.autofocus');
 require('./errors')();
 
@@ -23,7 +26,7 @@ browser = "brave-beta";
 editor = "code";
 terminal = "urxvt";
 files = "thunar";
-
+rofi = "rofi -show drun -theme config-global"; 
 
 -- LAYOUTS
 awful.layout.layouts = {
@@ -42,6 +45,7 @@ awful.screen.connect_for_each_screen(function(s)
 		awful.tag({ tags[3], tags[4] }, s, awful.layout.layouts[1]);
 	end
 	s.tags[1]:view_only();
+	s.hub = hub;
 end);
 
 -- HELPERS
@@ -57,6 +61,7 @@ local keys = gears.table.join(
 	awful.key({ modkey }, "c", function() awful.spawn(editor, { tag = mouse.screen.selected_tag }) end),
 	awful.key({ modkey }, "w", function() awful.spawn(browser, { tag = mouse.screen.selected_tag }) end),
 	awful.key({ modkey }, "f", function() awful.spawn(files, { tag = mouse.screen.selected_tag }) end),
+	awful.key({ modkey }, "space", function() awful.spawn(rofi, { tag = mouse.screen.selected_tag }) end),
 	
 	awful.key({ modkey, "Shift" }, "r", awesome.restart),
 	awful.key({ modkey, "Shift" }, "q", awesome.quit),
@@ -91,7 +96,14 @@ for i = 0, 9 do
 end
 
 local buttons = gears.table.join(
-	awful.button({ }, 1, function() closehubs() end)
+	awful.button({ }, 1, function() closehubs() end),
+	awful.button({ }, 3, function()
+		local s = awful.screen.focused();
+		local h = s.hub
+		h.visible = true;
+		h.enable_view_by_index(1);
+		h.x = (s.workarea.width - vars.hub.w - vars.global.m) + s.workarea.x;
+	end)
 );
 
 root.keys(keys);
