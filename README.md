@@ -1,5 +1,5 @@
 # DOTS
-My "dotfiles" for i3-gaps on Linux
+My "dotfiles" for awesomewm on Linux
 
 ## DEPS USED IN THIS CONFIG
 - pkill
