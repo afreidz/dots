@@ -25,7 +25,7 @@ awful.spawn.with_shell("$HOME/.config/awesome/startup/screenlock.sh");
 browser = "brave-beta";
 editor = "code";
 terminal = "urxvt";
-files = "thunar";
+files = "nautilus";
 rofi = "rofi -show drun -theme config-global"; 
 
 -- LAYOUTS

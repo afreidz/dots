@@ -1,3 +1,4 @@
+local gears = require('gears');
 local beautiful = require('beautiful');
 local xrdb = beautiful.xresources.get_current_theme();
 
@@ -10,7 +11,21 @@ return {
     m = 10,
     r = 7,
     o = 0.35,
-    user = '/home/afreidz/Pictures/andy-emoji-linicorn.png',
+    user = gears.filesystem.get_configuration_dir()..'/helpers/andy-emoji-linicorn.png',
+  },
+  fonts = {
+    is = "MaterialDesignIconsDesktop 12",
+    im = "MaterialDesignIconsDesktop 14",
+    il = "MaterialDesignIconsDesktop 20",
+    ts = "SF Pro Rounded 9",
+    tm = "SF Pro Rounded 10",
+    tl = "SF Pro Rounded 12",
+    tsl = "SF Pro Rounded Light 9",
+    tml = "SF Pro Rounded Light 10",
+    tll = "SF Pro Rounded Light 12",
+    tsb = "SF Pro Rounded Semibold 9",
+    tmb = "SF Pro Rounded Semibold 10",
+    tlb = "SF Pro Rounded Semibold 12",
   },
   topbar = {
     h = 30,
@@ -19,20 +34,42 @@ return {
   tagswitcher= {
     h = 120,
   },
-  volume = {
-    muted = false,
-    v = 0,
-  },
   hub = {
     i = 40,
     w = 800,
     h = 600,
     nw = 260,
-    fi = "MaterialDesignIconsDesktop 20",
-    nf = "Poppins Light 12",
-    nfb = "Poppins SemiBold 12",
-    vhf = "Poppins SemiBold 12",
-    vgsf = "Poppins Light 9",
-    vgkf = "Poppins Semibold 10",
+  },
+  icons = {
+    arch = '󰣇',
+    power = '󰐥',
+    date = '󰸘',
+    time = '󰅐',
+    vol_mute = '󰝟',
+    vol_1 = '󰕿',
+    vol_2 = '󰖀',
+    vol_3 = '󰕾',
+    wifi = '󰖩',
+    bt = '󰂯',
+    pac = '󰏗',
+    mem = '󰍛',
+    wifix = '󰖪',
+    btx = '󰂲',
+    lan = '󰲝',
+    lanx = '󰲜',
+    note = '󰀠',
+    web = '󰖟',
+    system = '󰄨',
+    display = '󰇄',
+    media = '󰝚',
+    theme = '󰸌',
+  },
+  commands = {
+    wifiup = 'bash '..gears.filesystem.get_configuration_dir()..'/helpers/wifiup.sh',
+    lanup = 'bash '..gears.filesystem.get_configuration_dir()..'/helpers/lanup.sh',
+    btup = 'bash '..gears.filesystem.get_configuration_dir()..'/helpers/btup.sh',
+    ismuted = 'bash -c "pamixer --get-mute | diff <(echo \"true\") -"',
+    vol = 'bash -c "pamixer --get-volume"',
+    ssid = 'iwgetid -r',
   }
 };

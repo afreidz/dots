@@ -26,6 +26,8 @@ My "dotfiles" for awesomewm on Linux
 - free
 - spicetify
 - nmcli
+- iwgetid
+- ip link
 
 
 ## BINARIES USED IN THIS CONFIG

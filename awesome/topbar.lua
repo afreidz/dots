@@ -12,16 +12,9 @@ local w = vars.topbar.w;
 local r = vars.global.r;
 local m = vars.global.m;
 local o = vars.global.o;
-local v = vars.volume.v;
 local f = vars.global.f;
 local t = vars.global.t;
 local b = vars.global.b;
-local muted = vars.volume.muted;
-
-local wifi_widgets = {};
-local pac_widgets = {};
-local mem_widgets = {};
-local vol_widgets = {};
 
 function make_launcher(s)
   local container = wibox({ 
@@ -34,8 +27,8 @@ function make_launcher(s)
     bg = t,
   });
 
-  local icon = wibox.widget.textbox("󰣇");
-  icon.font = "MaterialDesignIconsDesktop 14";
+  local icon = wibox.widget.textbox(vars.icons.arch);
+  icon.font = vars.fonts.im;
   icon.valign = "center";
   icon.align = "center";
 
@@ -70,8 +63,8 @@ function make_power(s)
     bg = t,
   });
 
-  local icon = wibox.widget.textbox("󰐥");
-  icon.font = "MaterialDesignIconsDesktop 14";
+  local icon = wibox.widget.textbox(vars.icons.power);
+  icon.font = vars.fonts.im;
   icon.valign = "center";
   icon.align = "center";
 
@@ -96,7 +89,7 @@ function make_power(s)
 end
 
 function make_date(s)
-  local dw = 160;
+  local dw = 190;
   local date = wibox({
     type = "dock",
     width = dw,
@@ -108,9 +101,9 @@ function make_date(s)
   });
 
   local clock = wibox.widget.textclock();
-  clock.font = "Poppins SemiBold 12";
+  clock.font = vars.fonts.tlb;
   clock.refresh = 60;
-  clock.format = '%a, %b %-d   <span font="Poppins Light 12">%-I:%M %p</span>';
+  clock.format = vars.icons.date..' %a, %b %-d   <span font="'..vars.fonts.tll..'">'..vars.icons.time..' %-I:%M %p</span>';
 
   date.x = ((s.workarea.width - (w+m+m)) + s.workarea.x) - dw;
   date.y = m;
@@ -136,7 +129,7 @@ function make_date(s)
 end
 
 function make_utility(s)
-  local uw = 190;
+  local uw = 240;
 
   local utility = wibox({
     type = "utility",
@@ -160,32 +153,52 @@ function make_utility(s)
     container:setup {
       widget = icon,
     }
-    return { text = icon, container = container, widget = container };
+    return { icon = icon, container = container, widget = container };
   end
 
-  local wifi = make_icon("󰖩");
-  local bt = make_icon("󰂯");
-  local vol = make_icon("󰕾");
-  local pac = make_icon("󰏗");
-  local mem = make_icon("󰍛");
+  local wifi = make_icon(vars.icons.wifi);
+  local bt = make_icon(vars.icons.bt);
+  local vol = make_icon(vars.icons.vol_1);
+  local pac = make_icon(vars.icons.pac);
+  local mem = make_icon(vars.icons.mem);
+  local lan = make_icon(vars.icons.lan);
+  local note = make_icon(vars.icons.note);
 
   wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
   bt.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
   vol.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(6) end)));
   pac.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
   mem.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
+  lan.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
+  note.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(1) end)));
 
-  table.insert(wifi_widgets, { icon = wifi.text });
-  table.insert(pac_widgets, { icon = pac.widget });
-  table.insert(mem_widgets, { icon = mem.widget });
-  table.insert(vol_widgets, { icon = vol.text });
+  awful.widget.watch(vars.commands.wifiup, 2, function(w,o,e,r,c)
+    if c == 0 then wifi.icon.text = vars.icons.wifi else wifi.icon.text = vars.icons.wifix end;
+  end);
+
+  awful.widget.watch(vars.commands.btup, 2, function(w,o,e,r,c)
+    if c == 0 then bt.icon.text = vars.icons.bt else bt.icon.text = vars.icons.btx end;
+  end);
+
+  awful.widget.watch(vars.commands.lanup, 2, function(w,o,e,r,c)
+    if c == 0 then lan.icon.text = vars.icons.lan else lan.icon.text = vars.icons.lanx end;
+  end);
+
+  awful.widget.watch(vars.commands.ismuted, 1, function(w,o,e,r,c)
+    if c == 0 then vol.icon.text = vars.icons.vol_mute else
+      awful.spawn.easy_async_with_shell(vars.commands.vol, function(o)
+        local v = tonumber(o);
+        if v >= 75 then vol.icon.text = vars.icons.vol_3 elseif v >= 50 then vol.icon.text = vars.icons.vol_2 else vol.icon.text = vars.icons.vol_1 end;
+      end);
+    end
+  end);
 
   local sep = wibox.widget.textbox("|");
   sep.forced_height = h;
   sep.forced_width = 20;
   sep.align = "center";
   sep.valign = "center";
-  sep.font = "Poppins 14";
+  sep.font = "Monospace 14";
   sep.opacity = 0.2;
 
   local container = wibox.container.background();
@@ -197,7 +210,7 @@ function make_utility(s)
     right = m,
     {
       widget = wibox.layout.fixed.horizontal,
-      wifi.widget,bt.widget,vol.widget,sep,pac.widget,mem.widget,
+      wifi.widget,bt.widget,lan.widget,vol.widget,sep,pac.widget,mem.widget,note.widget,
     }
   };
 
@@ -222,24 +235,11 @@ function make_utility(s)
   return utility;
 end
 
-
-function watch_wifi(widgets)
-  local wi = '󰖪';
-  local wt = 'wifi off';
-  local cmd = 'bash -c "nmcli dev wifi list | awk \'/\\*/{if (NR!=1) {print $3}}\'"';
-  awful.widget.watch(cmd, 3, function(w,o)
-    if(o ~= '') then wi = '󰖩' else wi = '󰖪' end;
-    for k,w in pairs(widgets) do
-      if(w.icon) then w.icon.text = wi end;
-    end
-  end);
-end
-
 function watch_mem(widgets)
   local i = '󰍛';
-  local r = '#F90239';
-  local y = '#FDC400';
-  local g = '#7DF26F';
+  local r = xrdb.color9;
+  local y = xrdb.color11;
+  local g = xrdb.color10;
   local c = g;
   local cmd = 'bash -c "free | grep Mem | awk \'{print $3/$2 * 100.0}\'"';
 
@@ -264,49 +264,12 @@ function watch_pac(widgets)
   local cmd = 'bash -c "yay -Sup | wc -l"';
   awful.widget.watch(sync_cmd, 60);
   awful.widget.watch(cmd, 10, function(w,o)
-    if(o ~= '') then pc = '#7DF26F' else pc = xrdb.foreground end;
+    if(o ~= '') then pc = xrdb.color10 else pc = xrdb.foreground end;
     for k,w in pairs(widgets) do
       if(w.icon) then w.icon.fg = pc end;
     end
   end);
 end
-
-function watch_vol(widgets)
-  local v1 = '󰕿';
-  local v2 = '󰖀';
-  local v3 = '󰕾';
-  local vm = '󰝟';
-  local i = v3;
-  local is_muted_cmd = 'bash -c "pamixer --get-mute"';
-  local vol_cmd = 'bash -c "pamixer --get-volume"';
-
-  awful.widget.watch(is_muted_cmd, 1, function(w,o)
-    if(tostring(o):gsub("^%s*(.-)%s*$", "%1") == 'true') then muted = true else muted = false end;
-  end);
-
-  awful.widget.watch(vol_cmd, 2, function(w,o)
-    if(muted) then
-      for k,w in pairs(widgets) do
-        if(w.icon) then w.icon.text = vm end;
-      end
-    else
-      for k,w in pairs(widgets) do
-        v = tonumber(o);
-        if(w.icon) then
-          if(v < 50) then 
-            i = v1;
-          elseif(v < 75) then
-            i = v2;
-          else
-            i = v3;
-          end
-          w.icon.text = i; 
-        end
-      end  
-    end
-  end);
-end
-
 
 function make_taglist(s)
   local container = wibox({
@@ -332,7 +295,7 @@ function make_taglist(s)
       {
         id = "text_role",
         widget = wibox.widget.textbox,
-        font = "MaterialDesignIconsDesktop 14",
+        font = vars.fonts.im,
       }
     }
   });
@@ -353,10 +316,4 @@ awful.screen.connect_for_each_screen(function(screen)
   screen.tags = make_taglist(screen);
   screen.launch = make_launcher(screen);
   screen.utility = make_utility(screen);
-
-  watch_wifi(wifi_widgets);
-  watch_pac(pac_widgets);
-  watch_mem(mem_widgets);
-  watch_vol(vol_widgets);
-
 end);

@@ -13,7 +13,7 @@ return function()
   view.right = vars.global.m;
 
   local title = wibox.widget.textbox("System");
-  title.font = vars.hub.vhf;
+  title.font = vars.fonts.tlb;
   title.forced_height = vars.hub.i + vars.global.m + vars.global.m;
 
   local graph = wibox.container.background();
@@ -26,8 +26,8 @@ return function()
   local scale = wibox.layout.align.vertical();
   local scale_max = wibox.widget.textbox('100%');
   local scale_min = wibox.widget.textbox('0%');
-  scale_max.font = vars.hub.vgsf;
-  scale_min.font = vars.hub.vgsf;
+  scale_max.font = vars.fonts.tsl;
+  scale_min.font = vars.fonts.tsl;
   scale.first = scale_max;
   scale.third = scale_min;
   scale.second = wibox.widget.base.empty_widget();
@@ -36,14 +36,14 @@ return function()
   local ram_progress = wibox.widget.progressbar();
   ram_progress.max_value = 100;
   ram_progress.background_color = vars.global.t;
-  ram_progress.color = xrdb.color9;
+  ram_progress.color = xrdb.color12;
   ram_progress.value = 0;
   ram_progress.bar_shape = function(c,w,h) gears.shape.partially_rounded_rect(c,w,h, false, true, true, false, vars.global.r) end;
 
   local cpu_progress = wibox.widget.progressbar();
   cpu_progress.max_value = 100;
   cpu_progress.background_color = vars.global.t;
-  cpu_progress.color = xrdb.color14;
+  cpu_progress.color = xrdb.color13;
   cpu_progress.value = 0;
   cpu_progress.bar_shape = function(c,w,h) gears.shape.partially_rounded_rect(c,w,h, false, true, true, false, vars.global.r) end;
 
@@ -59,25 +59,25 @@ return function()
   local disk = wibox.container.rotate(disk_progress, 'east');
 
   local ram_value = wibox.widget.textbox();
-  ram_value.font = vars.hub.vgsf;
+  ram_value.font = vars.fonts.tsl;
   ram_value.visible = false;
 
   local cpu_value = wibox.widget.textbox();
-  cpu_value.font = vars.hub.vgsf;
+  cpu_value.font = vars.fonts.tsl;
   cpu_value.visible = false;
 
   local disk_value = wibox.widget.textbox();
-  disk_value.font = vars.hub.vgsf;
+  disk_value.font = vars.fonts.tsl;
   disk_value.visible = false;
 
   local ram_key = wibox.widget.textbox("RAM");
-  ram_key.font = vars.hub.vgkf;
+  ram_key.font = vars.fonts.tmb;
 
   local cpu_key = wibox.widget.textbox("CPU");
-  cpu_key.font = vars.hub.vgkf;
+  cpu_key.font = vars.fonts.tmb;
 
   local disk_key = wibox.widget.textbox("Disk");
-  disk_key.font = vars.hub.vgkf;
+  disk_key.font = vars.fonts.tmb;
 
   ram:connect_signal("mouse::enter", function() ram_value.visible = true end);
   ram:connect_signal("mouse::leave", function() ram_value.visible = false end);

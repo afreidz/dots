@@ -12,16 +12,16 @@
 *.color9:       #f90239
 
 ! green
-*.color2:       #e1503e
-*.color10:      #fa5945
+*.color2:       #72D266
+*.color10:      #7DF26F
 
 ! yellow
 *.color3:       #fb9e3c
 *.color11:      #fdc400
 
 ! blue
-*.color4:       #017EC0
-*.color12:      #1BBAEE
+*.color4:       #016EE3
+*.color12:      #017AFC
 
 ! magenta
 *.color5:       #e00267

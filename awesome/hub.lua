@@ -11,7 +11,7 @@ local views = {};
 function close_views()
   gears.table.map(function(v)
     v.view.visible = false;
-    v.title.font = vars.hub.nf;
+    v.title.font = vars.fonts.tll;
   end, views);
 end
 
@@ -19,7 +19,7 @@ function enable_view_by_index(i)
   if views[i] then 
     close_views();
     views[i].view.visible = true;
-    views[i].title.font = vars.hub.nfb;
+    views[i].title.font = vars.fonts.tlb;
   end
 end 
 
@@ -31,10 +31,10 @@ function make_view(i, t, v, a)
   icon.forced_height = vars.hub.i;
   icon.forced_width = vars.hub.i;
   icon.align = "center";
-  icon.font = vars.hub.fi;
+  icon.font = vars.fonts.il;
 
   local title = wibox.widget.textbox(t);
-  if a == nil then title.font = vars.hub.nf else title.font = vars.hub.nfb end;
+  if a == nil then title.font = vars.fonts.tll else title.font = vars.fonts.tllb end;
 
   local view = wibox.container.margin();
   view.margins = vars.global.m;
@@ -61,7 +61,7 @@ function make_view(i, t, v, a)
     awful.button({ }, 1, function()
       close_views();
       view.visible = true;
-      title.font = vars.hub.nfb;
+      title.font = vars.fonts.tlb;
     end)
   ));
   button:setup {
@@ -89,20 +89,13 @@ function make_nav()
     stops = { { 0, xrdb.color4 }, { 1, xrdb.color12 } }
   });
 
-  local powerbg = gears.color({
-    type = 'linear',
-    from = { 0, 0 },
-    to = { vars.hub.nw, vars.hub.i },
-    stops = { { 0, xrdb.color5 }, { 1, xrdb.color13 } }
-  });
-
   local nav = wibox.container.background();
   nav.bg = navbg;
   nav.forced_width = vars.hub.nw;
 
   local user = wibox.widget.textbox("");
-  user.font = "Poppins SemiBold 12";
-  awful.spawn.easy_async_with_shell('whoami', function(u) user.text = u end);
+  user.font = vars.fonts.tlb;
+  awful.spawn.easy_async_with_shell('whoami', function(u) user.text = u:gsub("^%s*(.-)%s*$", "%1") end);
 
   local avatar = wibox.widget {
     layout = wibox.container.background,
@@ -122,25 +115,25 @@ function make_nav()
   rule.bg = vars.global.f2;
   rule.widget = wibox.widget.base.empty_widget();
 
-  table.insert(views, make_view("󰀠", "notifications"));
-  table.insert(views, make_view("󰸘", "calendar"));
-  table.insert(views, make_view("󰖟", "connections"));
-  table.insert(views, make_view("󰄨", "system", require('views.system')()));
-  table.insert(views, make_view("󰇄", "display"));
-  table.insert(views, make_view("󰝚", "media"));
-  table.insert(views, make_view("󰸌", "customization"));
+  table.insert(views, make_view(vars.icons.note, "notifications"));
+  table.insert(views, make_view(vars.icons.date, "calendar", require('views.calendar')()));
+  table.insert(views, make_view(vars.icons.web, "connections", require('views.connections')()));
+  table.insert(views, make_view(vars.icons.system, "system", require('views.system')()));
+  table.insert(views, make_view(vars.icons.display, "display"));
+  table.insert(views, make_view(vars.icons.media, "media"));
+  table.insert(views, make_view(vars.icons.theme, "customization"));
 
   local header = wibox.container.margin();
   header.margins = vars.global.m;
   header.forced_height = vars.global.m + vars.hub.i + vars.global.m;
   header:setup {
     layout = wibox.layout.align.horizontal,
-    avatar,
     {
       layout = wibox.container.margin,
-      left = vars.global.m,
-      user
-    }
+      right = vars.global.m,
+      avatar,
+    },
+    user
   };
 
   local nav_container = wibox.layout.fixed.vertical();
@@ -151,7 +144,7 @@ function make_nav()
   gears.table.map(function(v) nav_container:add(v.link) end, views);
 
   local power = wibox.container.background();
-  power.bg = powerbg;
+  power.bg = xrdb.color1;
   power.shape = rounded();
   power.forced_height = vars.hub.i;
   power:setup {
@@ -161,7 +154,7 @@ function make_nav()
     {
       widget = wibox.widget.textbox,
       text = '󰐥',
-      font = vars.hub.fi,
+      font = vars.fonts.il,
     }
   };
 
@@ -217,6 +210,8 @@ return function()
   hub.close_views = close_views;
   hub.make_view = make_view;
   hub.views = views;
+
+  close_views();
 
   return hub;
 end
