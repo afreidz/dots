@@ -115,7 +115,7 @@ function make_nav()
   rule.bg = vars.global.f2;
   rule.widget = wibox.widget.base.empty_widget();
 
-  table.insert(views, make_view(vars.icons.note, "notifications"));
+  table.insert(views, make_view(vars.icons.note, "notifications", require('views.notifications')()));
   table.insert(views, make_view(vars.icons.date, "calendar", require('views.calendar')()));
   table.insert(views, make_view(vars.icons.web, "connections", require('views.connections')()));
   table.insert(views, make_view(vars.icons.system, "system", require('views.system')()));

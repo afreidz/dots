@@ -193,6 +193,21 @@ function make_utility(s)
     end
   end);
 
+  awful.widget.watch(vars.commands.ramcmd, 5, function(w,o,e,r,c)
+    local n = tonumber(o);
+    if n >= 75 then mem.container.fg = xrdb.color9 elseif n >= 50 then mem.container.fg = xrdb.color11 else mem.container.fg = xrdb.color10 end;
+  end);
+
+  awful.widget.watch(vars.commands.synccmd, 60);
+  awful.widget.watch(vars.commands.updatescmd, 10, function(w,o)
+    local n = tonumber(o);
+    if n > 0 then pac.container.fg = xrdb.color10 else pac.container.fg = xrdb.foreground end;
+  end);
+
+  awful.widget.watch('echo 1', 1, function(w,o)
+    if #vars.notifications.active > 0 then note.container.fg = xrdb.color10 else note.container.fg = xrdb.foreground end;
+  end);
+
   local sep = wibox.widget.textbox("|");
   sep.forced_height = h;
   sep.forced_width = 20;
@@ -233,42 +248,6 @@ function make_utility(s)
   };
 
   return utility;
-end
-
-function watch_mem(widgets)
-  local i = '󰍛';
-  local r = xrdb.color9;
-  local y = xrdb.color11;
-  local g = xrdb.color10;
-  local c = g;
-  local cmd = 'bash -c "free | grep Mem | awk \'{print $3/$2 * 100.0}\'"';
-
-  awful.widget.watch(cmd, 2, function(w,o)
-    if(tonumber(o) < 50 ) then
-      c = g;
-    elseif (tonumber(o) < 75) then 
-      c = y;
-    else
-      c = r;
-    end
-    for k,w in pairs(widgets) do
-      if(w.icon) then w.icon.fg = c end;
-    end
-  end);
-end
-
-function watch_pac(widgets)
-  local pc = xrdb.foreground;
-  local pt = 'no updates';
-  local sync_cmd = 'bash -c "yay -Syy"';
-  local cmd = 'bash -c "yay -Sup | wc -l"';
-  awful.widget.watch(sync_cmd, 60);
-  awful.widget.watch(cmd, 10, function(w,o)
-    if(o ~= '') then pc = xrdb.color10 else pc = xrdb.foreground end;
-    for k,w in pairs(widgets) do
-      if(w.icon) then w.icon.fg = pc end;
-    end
-  end);
 end
 
 function make_taglist(s)

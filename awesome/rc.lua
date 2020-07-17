@@ -1,12 +1,10 @@
 local gears = require('gears');
 local awful = require('awful');
 local wibox = require('wibox');
+local ruled = require('ruled');
 local naughty = require('naughty');
 local vars = require('helpers.vars');
 local beautiful = require('beautiful');
-
-local hub = require('./hub')();
-require('awful.autofocus');
 require('./errors')();
 
 -- THEME
@@ -18,8 +16,7 @@ modkey = 'Mod4';
 -- SPAWNS
 awful.spawn.with_shell("$HOME/.config/awesome/startup/wall.sh");
 awful.spawn.with_shell("$HOME/.config/awesome/startup/compositor.sh");
-awful.spawn.with_shell("$HOME/.config/awesome/startup/screenlock.sh");
-
+--awful.spawn.with_shell("$HOME/.config/awesome/startup/screenlock.sh");
 
 -- APPS
 browser = "brave-beta";
@@ -29,16 +26,18 @@ files = "nautilus";
 rofi = "rofi -show drun -theme config-global"; 
 
 -- LAYOUTS
-awful.layout.layouts = {
-	awful.layout.suit.tile,
-	awful.layout.suit.spiral.dwindle,
-	awful.layout.suit.floating
-};
-
+tag.connect_signal('request::default_layouts', function()
+	awful.layout.append_default_layouts({
+		awful.layout.suit.tile,
+		awful.layout.suit.spiral.dwindle,
+		awful.layout.suit.floating
+	});
+end);
 
 -- TAGS/LAYOUTS
 local tags = require('helpers.tags');
-awful.screen.connect_for_each_screen(function(s)	
+local hub = require('./hub')();
+screen.connect_signal('request::desktop_decoration', function(s)
 	if s.index == 1 then
 		awful.tag({ tags[1], tags[2] }, s, awful.layout.layouts[1]);
 	else
@@ -53,18 +52,16 @@ function closehubs()
 	awful.screen.connect_for_each_screen(function(s) s.hub.visible = false end);
 end
 
-
--- GLOBAL KEYBINDS/BUTTONS
-local keys = gears.table.join(
-
-	awful.key({ modkey }, "Return", function() awful.spawn(terminal, { tag = mouse.screen.selected_tag }) end),
-	awful.key({ modkey }, "c", function() awful.spawn(editor, { tag = mouse.screen.selected_tag }) end),
-	awful.key({ modkey }, "w", function() awful.spawn(browser, { tag = mouse.screen.selected_tag }) end),
-	awful.key({ modkey }, "f", function() awful.spawn(files, { tag = mouse.screen.selected_tag }) end),
-	awful.key({ modkey }, "space", function() awful.spawn(rofi, { tag = mouse.screen.selected_tag }) end),
+--GLOBAL KEYBINDS/BUTTONS
+awful.keyboard.append_global_keybindings({
+	awful.key({ modkey }, "Return", function() awful.spawn(terminal) end),
+	awful.key({ modkey }, "c", function() awful.spawn(editor) end),
+	awful.key({ modkey }, "w", function() awful.spawn(browser) end),
+	awful.key({ modkey }, "f", function() awful.spawn(files) end),
+	awful.key({ modkey }, "space", function() awful.spawn(rofi) end),
 	
 	awful.key({ modkey, "Shift" }, "r", awesome.restart),
-	awful.key({ modkey, "Shift" }, "q", awesome.quit),
+	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
 	
 	awful.key({ modkey }, "Left", function() awful.client.focus.byidx(-1) end),
 	awful.key({ modkey }, "Right", function() awful.client.focus.byidx(1) end),
@@ -76,14 +73,15 @@ local keys = gears.table.join(
 	awful.key({ modkey }, "[", function() awful.tag.incmwfact(-0.05) end), 
 	awful.key({ modkey, "Shift" }, "]", function() awful.tag.incmwfact(0.01) end),
 	awful.key({ modkey, "Shift" }, "[", function() awful.tag.incmwfact(-0.01) end)
-);
+});
+
 
 -- TAG KEYBINDS
 for i = 0, 9 do
 	local spot = i;
 	if(spot == 0) then spot = 10 end
 	
-	keys = gears.table.join(keys,
+	awful.keyboard.append_global_keybindings({
 		awful.key({ modkey }, spot, function()
 			local tag = root.tags()[i];
 			if tag then tag:view_only() end;
@@ -92,51 +90,52 @@ for i = 0, 9 do
 			local tag = root.tags()[i];
 			if tag then client.focus:move_to_tag(tag) end;
 		end)
-	);
+	});
 end
 
-local buttons = gears.table.join(
-	awful.button({ }, 1, function() closehubs() end),
-	awful.button({ }, 3, function()
+awful.mouse.append_global_mousebindings({
+	awful.button({}, 1, function() closehubs() end),
+	awful.button({}, 3, function()
 		local s = awful.screen.focused();
 		local h = s.hub
 		h.visible = true;
 		h.enable_view_by_index(1);
-		h.x = (s.workarea.width - vars.hub.w - vars.global.m) + s.workarea.x;
+		h.x = (s.workarea.width - vars.hub.w - vars.global.m) + s.workarea.x;		
 	end)
-);
-
-root.keys(keys);
-root.buttons(buttons); -- apply them
-
+});
 
 -- CLIENT KEYBINDS & BUTTONS
-clientkeys = gears.table.join(
-	awful.key({ modkey }, "q", function (c) c.kill(c) end),
-	awful.key({ modkey, "Control" }, "Right", function(c) c:move_to_screen(c.screen.index+1) end),
-	awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end)
-);
+client.connect_signal("request::default_keybindings", function(c)
+	awful.keyboard.append_client_keybindings({
+		awful.key({ modkey }, "q", function (c) c.kill(c) end),
+		awful.key({ modkey, "Control" }, "Right", function(c) c:move_to_screen(c.screen.index+1) end),
+		awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end)
+	});
+end);
 
-clientbtns = gears.table.join(
-	awful.button({ }, 1, function (c)
-		closehubs();
-		client.focus = c;
-		c:raise();
-	end)
-);
+client.connect_signal("request::default_mousebindings", function(c)
+	awful.mouse.append_client_mousebindings({
+		awful.button({}, 1, function (c)
+			closehubs();
+			c:activate { context = "mouse_click";
+		} end),
+		awful.button({ modkey }, 1, function (c) c:activate { context = "mouse_click", action = "mouse_move" } end)
+	});
+end);
 
 -- RULES
-awful.rules.rules = {
-	{
+ruled.client.connect_signal("request::rules", function()
+	ruled.client.append_rule {
+		id = 'global',
 		rule = { },
 		properties = {
-			focus = true,
-			keys = clientkeys,
-			buttons = clientbtns,
+			focus = awful.client.focus.filter,
+			raise = true,
 			size_hints_honor = false,
+			placement = awful.placement.no_offscreen
 		}
 	}
-};
+end);
 
 client.connect_signal("manage", function(c) 
 	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end

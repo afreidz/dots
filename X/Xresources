@@ -37,6 +37,7 @@
 
 
 ! URxvt SETTINGS
+URxvt.termName: rxvt-unicode-256color
 URxvt.letterSpace: -1
 URxvt.scrollBar: false
 URxvt.internalBorder: 60

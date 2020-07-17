@@ -19,7 +19,7 @@ return function()
   local graph = wibox.container.background();
   graph.bg = vars.global.f2;
   graph.shape = rounded();
-  graph.forced_height = 300;
+  graph.forced_height = 250;
   graph.forced_width = vars.hub.w - vars.hub.nw - (vars.global.m*4);
   graph.widget = wibox.widget.base.empty_widget();
 
@@ -128,7 +128,7 @@ return function()
     },
     {
       layout = wibox.container.margin,
-      left = 50, right = vars.global.m*5,
+      left = vars.global.m*5, right = vars.global.m*5,
       {
         layout = wibox.layout.flex.horizontal,
         forced_height = vars.hub.i,
@@ -140,11 +140,46 @@ return function()
     }
   };
 
+  local pac = wibox.container.background();
+  pac.bg = xrdb.color12;
+  pac.fg = xrdb.foreground;
+  pac.shape = rounded();
+
+  local pac_icon = wibox.widget.textbox(vars.icons.pac);
+  pac_icon.font = vars.fonts.il;
+  pac_icon.forced_height = vars.hub.i + vars.global.m + vars.global.m;
+
+  local pac_title = wibox.widget.textbox('System Updates');
+  pac_title.font = vars.fonts.tll;
+
+  local pac_value = wibox.widget.textbox('none available');
+  pac_value.font = vars.fonts.tmb;
+
+  pac:setup {
+    layout = wibox.layout.align.horizontal,
+    { layout = wibox.container.margin, left = vars.global.m, pac_icon },
+    { layout = wibox.container.margin, left = vars.global.m, pac_title },
+    { layout = wibox.container.margin, right = vars.global.m, pac_value },
+  };
+
+  local proc = wibox.container.background();
+  proc.bg = vars.global.f2;
+  proc.shape = rounded();
+
+  local proc_text = wibox.widget.textbox();
+  proc_text.font = vars.fonts.mll;
+
+  proc:setup {
+    layout = wibox.container.margin,
+    margins = vars.global.m,
+    proc_text;
+  }
+
   view:setup {
     layout = wibox.container.background,
     fg = vars.global.b,
     {
-      layout = wibox.layout.align.vertical,
+      layout = wibox.layout.fixed.vertical,
       {
         layout = wibox.container.place,
         title,
@@ -154,28 +189,43 @@ return function()
         valign = "top",
         halign = "center",
         graph,
+      },
+      {
+        layout = wibox.container.margin,
+        margins = vars.global.m,
+        pac,
+      },
+      {
+        layout = wibox.container.margin,
+        left = vars.global.m, right = vars.global.m,
+        proc,
       }
     }
   }
 
-  local ram_cmd = 'bash -c "free | grep Mem | awk \'{print $3/$2 * 100.0}\'"';
-  local cpu_cmd = 'bash -c "grep cpu /proc/stat | awk \'{usage=($2+$4)*100/($2+$4+$5)} END {print usage}\'"';
-  local disk_cmd = 'bash -c "df | grep /dev/mapper/cryptroot | awk \'{print $5}\'"';
-
-  awful.widget.watch(ram_cmd, 2, function(w,o)
+  awful.widget.watch(vars.commands.ramcmd, 2, function(w,o)
     ram_progress:set_value(tonumber(o));
     ram_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
   end);
 
-  awful.widget.watch(cpu_cmd, 2, function(w,o)
+  awful.widget.watch(vars.commands.cpucmd, 2, function(w,o,e,r,c)
     cpu_progress:set_value(tonumber(o));
     cpu_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
   end);
 
-  awful.widget.watch(disk_cmd, 5, function(w,o)
+  awful.widget.watch(vars.commands.diskcmd, 5, function(w,o)
     local val = o:gsub("%%",""):gsub("^%s*(.-)%s*$", "%1");
     disk_progress:set_value(tonumber(val));
     disk_value.text = val.."%";
+  end);
+
+  awful.widget.watch(vars.commands.updatecmd, 5, function(w, o)
+    local n = tonumber(o);
+    if n <= 0 then pac_value.text = 'none available' else pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' end
+  end);
+
+  awful.widget.watch(vars.commands.proccmd, 5, function(w, o)
+    proc_text.text = o;
   end);
 
   return view;

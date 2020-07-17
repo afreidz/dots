@@ -28,6 +28,7 @@ My "dotfiles" for awesomewm on Linux
 - nmcli
 - iwgetid
 - ip link
+- yay
 
 
 ## BINARIES USED IN THIS CONFIG
