@@ -219,7 +219,7 @@ return function()
     disk_value.text = val.."%";
   end);
 
-  awful.widget.watch(vars.commands.updatecmd, 5, function(w, o)
+  awful.widget.watch(vars.commands.updatescmd, 5, function(w,o)
     local n = tonumber(o);
     if n <= 0 then pac_value.text = 'none available' else pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' end
   end);
