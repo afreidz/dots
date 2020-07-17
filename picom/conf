@@ -26,11 +26,11 @@ blur-background-exclude = [
 
 corner-radius = 7;
 rounded-corners-exclude = [
-    "window_type = 'menu'",
     "window_type = 'dock'",
 ];
 
 wintypes: {
+    menu = { shadow: false },
     dock = { shadow: false },
     utility = { shadow: false }
 };

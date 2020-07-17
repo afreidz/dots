@@ -36,12 +36,12 @@ function make_launcher(s)
   button.bg = xrdb.color4;
   button.fg = xrdb.foreground;
   button.widget = icon;
-  button.shape = rounded();
+  --button.shape = rounded();
 
   container:struts({ top = h + m });
   container.x = s.workarea.x + m;
   container.y = m;
-  container.shape = rounded();
+  --container.shape = rounded();
   container:setup {
     layout = wibox.container.margin,
     forced_width = w,
@@ -72,12 +72,12 @@ function make_power(s)
   button.bg = xrdb.color9;
   button.fg = xrdb.foreground;
   button.widget = icon;
-  button.shape = rounded();
+  --button.shape = rounded();
 
   container:struts({ top = h + m });
   container.x = (s.workarea.width - (w+m)) + s.workarea.x;
   container.y = m;
-  container.shape = rounded();
+  --container.shape = rounded();
   container:setup {
     layout = wibox.container.margin,
     forced_width = w,
@@ -116,13 +116,9 @@ function make_date(s)
   };
 
   date:buttons(gears.table.join(awful.button({ }, 1, function()
-    if not s.hub.visible then
-      s.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
-      s.hub.visible = true;
-      s.hub.enable_view_by_index(2);
-    else
-      s.hub.visible = false;
-    end
+    s.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
+    s.hub.visible = true;
+    s.hub.enable_view_by_index(2);
   end)));
 
   return date;
@@ -233,12 +229,8 @@ function make_utility(s)
   utility.y = m;
   utility.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;
   utility:buttons(gears.table.join(awful.button({ }, 1, function()
-    if not s.hub.visible then
-      s.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
-      s.hub.visible = true;
-    else
-      s.hub.visible = false;
-    end
+    s.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
+    s.hub.visible = true;
   end)));
 
   utility:setup {
