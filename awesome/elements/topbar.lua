@@ -113,7 +113,7 @@ function make_date(s)
   };
 
   date:buttons(gears.table.join(awful.button({ }, 1, function()
-    root.hub.x = (s.workarea.width - varroot.hub.w - m) + s.workarea.x;
+    root.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
     root.hub.visible = true;
     root.hub.enable_view_by_index(2);
   end)));

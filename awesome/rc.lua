@@ -148,7 +148,7 @@ topbar = require('elements.topbar')();
 tagswitcher = require('elements.tagswitch')();
 lockscreen = require('elements.lockscreen')();
 
-awful.spawn.with_line_callback(vars.commands.lock, {
+awful.spawn.with_line_callback(vars.commands.idle, {
   stdout = function() lockscreen.lock() end
 });
 
