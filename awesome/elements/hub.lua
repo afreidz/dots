@@ -55,7 +55,7 @@ function make_view(i, t, v, a)
     view = v;
   end
 
-  button:connect_signal("mouse::enter", function() button.bg = vars.global.f2 end);
+  button:connect_signal("mouse::enter", function() button.bg = vars.global.f end);
   button:connect_signal("mouse::leave", function() button.bg = vars.global.t end);
   button:buttons(gears.table.join(
     awful.button({ }, 1, function()
@@ -112,7 +112,7 @@ function make_nav()
 
   local rule = wibox.container.background();
   rule.forced_height = 1;
-  rule.bg = vars.global.f2;
+  rule.bg = vars.global.f;
   rule.widget = wibox.widget.base.empty_widget();
 
   table.insert(views, make_view(vars.icons.note, "notifications", require('views.notifications')()));
@@ -206,12 +206,14 @@ return function()
     }
   };
   
+  hub.close = function() hub.visible = false end;
   hub.enable_view_by_index = enable_view_by_index;
   hub.close_views = close_views;
   hub.make_view = make_view;
   hub.views = views;
 
   close_views();
+  root.hub = hub;
 
   return hub;
 end

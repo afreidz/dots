@@ -126,18 +126,20 @@ function make_taglist(s)
   return container;
 end
 
-awful.screen.connect_for_each_screen(function(screen)
-  screen.tagswitch = make_taglist(screen);
-end);
+return function()
+  awful.screen.connect_for_each_screen(function(screen)
+    screen.tagswitch = make_taglist(screen);
+  end);
 
-awful.keygrabber {
-  keybindings = {
-    {{'Mod4'}, 'Tab', function() awful.tag.viewnext(awful.screen.focused()) end},
-    {{'Mod4', 'Shift'}, 'Tab', function() awful.tag.viewprev(awful.screen.focused()) end}
-  },
-  stop_key = 'Mod4',
-  stop_event = 'release',
-  export_keybindings = true,
-  start_callback = toggle_tag_switcher,
-  stop_callback = toggle_tag_switcher,
-}
+  awful.keygrabber {
+    keybindings = {
+      {{'Mod4'}, 'Tab', function() awful.tag.viewnext(awful.screen.focused()) end},
+      {{'Mod4', 'Shift'}, 'Tab', function() awful.tag.viewprev(awful.screen.focused()) end}
+    },
+    stop_key = 'Mod4',
+    stop_event = 'release',
+    export_keybindings = true,
+    start_callback = toggle_tag_switcher,
+    stop_callback = toggle_tag_switcher,
+  }
+end

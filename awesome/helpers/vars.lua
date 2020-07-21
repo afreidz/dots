@@ -4,8 +4,8 @@ local xrdb = beautiful.xresources.get_current_theme();
 
 return {
   global = {
-    f = xrdb.color7.."73",
-    f2 = xrdb.color7.."80",
+    f = xrdb.color7.."75",
+    f2 = xrdb.color7..'D9',
     t = "#00000000",
     b = "#000000",
     m = 10,
@@ -17,6 +17,7 @@ return {
     is = "MaterialDesignIconsDesktop 12",
     im = "MaterialDesignIconsDesktop 14",
     il = "MaterialDesignIconsDesktop 20",
+    ixxl = "MaterialDesignIconsDesktop 100",
     ts = "SF Pro Rounded 9",
     tm = "SF Pro Rounded 10",
     tl = "SF Pro Rounded 12",
@@ -26,8 +27,16 @@ return {
     tsb = "SF Pro Rounded Semibold 9",
     tmb = "SF Pro Rounded Semibold 10",
     tlb = "SF Pro Rounded Semibold 12",
-    mlb = "Consolas Bold 12",
-    mll = "Consolas 12",
+    txlb = "SF Pro Rounded Semibold 15",
+    txxlb = "SF Pro Rounded Semibold 25",
+    mlb = "Operator Mono Lig Bold 12",
+    mll = "Operator Mono Lig Light 12",
+  },
+  lock = {
+    w = 400,
+    h = 330,
+    hh = 230,
+    a = 100,
   },
   topbar = {
     h = 30,
@@ -65,6 +74,7 @@ return {
     display = '󰇄',
     media = '󰝚',
     theme = '󰸌',
+    down = '󰳜',
   },
   commands = {
     cpucmd = 'bash '..gears.filesystem.get_configuration_dir()..'helpers/cpu.sh',
@@ -75,6 +85,7 @@ return {
     btup = 'bash '..gears.filesystem.get_configuration_dir()..'helpers/btup.sh',
     btdevices = 'bash '..gears.filesystem.get_configuration_dir()..'helpers/btdevices.sh',
     btdevice = 'bash '..gears.filesystem.get_configuration_dir()..'helpers/btdevice.sh',
+    lock = 'bash -c "xidlehook --not-when-audio --timer 900 \'echo lock\' \'\' "',
     proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%mem | head -n 6"',
     synccmd = 'bash -c "yay -Syy"',
     updatescmd = 'bash -c "yay -Sup | wc -l"',

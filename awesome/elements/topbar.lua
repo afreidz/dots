@@ -22,8 +22,7 @@ function make_launcher(s)
     height = h,
     type = "menu",
     screen = s,
-    ontop = true,
-    visible = true,
+    visible = false,
     bg = t,
   });
 
@@ -58,8 +57,7 @@ function make_power(s)
     height = h,
     type = "menu",
     screen = s,
-    ontop = true,
-    visible = true,
+    visible = false,
     bg = t,
   });
 
@@ -89,14 +87,13 @@ function make_power(s)
 end
 
 function make_date(s)
-  local dw = 190;
+  local dw = 200;
   local date = wibox({
     type = "dock",
     width = dw,
     height = h,
     screen = s,
-    ontop = true,
-    visible = true,
+    visible = false,
     bg = t,
   });
 
@@ -116,9 +113,9 @@ function make_date(s)
   };
 
   date:buttons(gears.table.join(awful.button({ }, 1, function()
-    s.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
-    s.hub.visible = true;
-    s.hub.enable_view_by_index(2);
+    root.hub.x = (s.workarea.width - varroot.hub.w - m) + s.workarea.x;
+    root.hub.visible = true;
+    root.hub.enable_view_by_index(2);
   end)));
 
   return date;
@@ -132,8 +129,7 @@ function make_utility(s)
     width = uw,
     height = h,
     screen = s,
-    ontop = true,
-    visible = true,
+    visible = false,
     bg = t,
   });
 
@@ -160,13 +156,13 @@ function make_utility(s)
   local lan = make_icon(vars.icons.lan);
   local note = make_icon(vars.icons.note);
 
-  wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
-  bt.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
-  vol.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(6) end)));
-  pac.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
-  mem.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(4) end)));
-  lan.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(3) end)));
-  note.widget:buttons(gears.table.join(awful.button({}, 1, function() s.hub.enable_view_by_index(1) end)));
+  wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
+  bt.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
+  vol.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(6) end)));
+  pac.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(4) end)));
+  mem.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(4) end)));
+  lan.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
+  note.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(1) end)));
 
   awful.widget.watch(vars.commands.wifiup, 2, function(w,o,e,r,c)
     if c == 0 then wifi.icon.text = vars.icons.wifi else wifi.icon.text = vars.icons.wifix end;
@@ -229,8 +225,8 @@ function make_utility(s)
   utility.y = m;
   utility.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;
   utility:buttons(gears.table.join(awful.button({ }, 1, function()
-    s.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
-    s.hub.visible = true;
+    root.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
+    root.hub.visible = true;
   end)));
 
   utility:setup {
@@ -248,8 +244,7 @@ function make_taglist(s)
     width = w,
     height = h,
     screen = s,
-    ontop = true,
-    visible = true,
+    visible = false,
     bg = f,
     fg = b,
   });
@@ -281,10 +276,25 @@ function make_taglist(s)
   return container;
 end
 
-awful.screen.connect_for_each_screen(function(screen)
-  screen.date = make_date(screen);
-  screen.power = make_power(screen);
-  screen.tags = make_taglist(screen);
-  screen.launch = make_launcher(screen);
-  screen.utility = make_utility(screen);
-end);
+
+return function()
+  awful.screen.connect_for_each_screen(function(screen)
+    screen.date = make_date(screen);
+    screen.power = make_power(screen);
+    screen.tags = make_taglist(screen);
+    screen.launch = make_launcher(screen);
+    screen.utility = make_utility(screen);
+  end);
+
+  return {
+    show = function()
+      awful.screen.connect_for_each_screen(function(s)
+        s.date.visible = true;
+        s.power.visible = true;
+        s.tags.visible = true;
+        s.launch.visible = true;
+        s.utility.visible = true;
+      end)
+    end
+  }
+end

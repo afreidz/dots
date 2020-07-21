@@ -1,0 +1,2 @@
+export WALLPAPER=$(awk 'BEGIN { FS = "file=" } ; { print $2 }' $HOME/.config/nitrogen/bg-saved.cfg | sed -n '/./{p;q;}')
+convert "${WALLPAPER//[$'\t\r\n']}" -filter Gaussian -blur 0x20 $HOME/.config/awesome/helpers/wall.png

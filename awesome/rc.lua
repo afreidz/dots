@@ -1,3 +1,4 @@
+local os = require('os');
 local gears = require('gears');
 local awful = require('awful');
 local wibox = require('wibox');
@@ -7,16 +8,17 @@ local vars = require('helpers.vars');
 local beautiful = require('beautiful');
 require('./errors')();
 
+-- PLACEHOLDERS
+local hub = nil;
+local topbar = nil;
+local tagswitcher = nil;
+local lockscreen = nil;
+
 -- THEME
 beautiful.useless_gap = 5;
 
 -- MODKEY
 modkey = 'Mod4';
-
--- SPAWNS
-awful.spawn.with_shell("$HOME/.config/awesome/startup/wall.sh");
-awful.spawn.with_shell("$HOME/.config/awesome/startup/compositor.sh");
---awful.spawn.with_shell("$HOME/.config/awesome/startup/screenlock.sh");
 
 -- APPS
 browser = "brave-beta";
@@ -36,7 +38,6 @@ end);
 
 -- TAGS/LAYOUTS
 local tags = require('helpers.tags');
-local hub = require('./hub')();
 screen.connect_signal('request::desktop_decoration', function(s)
 	if s.index == 1 then
 		awful.tag({ tags[1], tags[2] }, s, awful.layout.layouts[1]);
@@ -44,13 +45,7 @@ screen.connect_signal('request::desktop_decoration', function(s)
 		awful.tag({ tags[3], tags[4] }, s, awful.layout.layouts[1]);
 	end
 	s.tags[1]:view_only();
-	s.hub = hub;
 end);
-
--- HELPERS
-function closehubs()
-	awful.screen.connect_for_each_screen(function(s) s.hub.visible = false end);
-end
 
 --GLOBAL KEYBINDS/BUTTONS
 awful.keyboard.append_global_keybindings({
@@ -60,8 +55,9 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey }, "f", function() awful.spawn(files) end),
 	awful.key({ modkey }, "space", function() awful.spawn(rofi) end),
 	
-	awful.key({ modkey, "Shift" }, "r", awesome.restart),
+	awful.key({ modkey, "Shift" }, "r", function() if lockscreen then lockscreen.lock(awesome.restart) end end),
 	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
+	awful.key({ modkey, "Shift" }, "l", function() if lockscreen then lockscreen.lock() end end),
 	
 	awful.key({ modkey }, "Left", function() awful.client.focus.byidx(-1) end),
 	awful.key({ modkey }, "Right", function() awful.client.focus.byidx(1) end),
@@ -94,7 +90,7 @@ for i = 0, 9 do
 end
 
 awful.mouse.append_global_mousebindings({
-	awful.button({}, 1, function() closehubs() end),
+	awful.button({}, 1, function() if hub then hub.close() end end),
 	awful.button({}, 3, function()
 		local s = awful.screen.focused();
 		local h = s.hub
@@ -116,7 +112,7 @@ end);
 client.connect_signal("request::default_mousebindings", function(c)
 	awful.mouse.append_client_mousebindings({
 		awful.button({}, 1, function (c)
-			closehubs();
+			if hub then hub.close() end
 			c:activate { context = "mouse_click";
 		} end),
 		awful.button({ modkey }, 1, function (c) c:activate { context = "mouse_click", action = "mouse_move" } end)
@@ -141,6 +137,20 @@ client.connect_signal("manage", function(c)
 	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end
 end);
 
+-- SPAWNS
+awful.spawn.with_shell("$HOME/.config/awesome/startup/wall.sh");
+awful.spawn.with_shell("$HOME/.config/awesome/startup/compositor.sh");
+-- awful.spawn.with_shell("$HOME/.config/awesome/startup/lockscreenbg.sh");
+
 -- WIDGETS
-require('./topbar');
-require('./tagswitch');
+hub = require('elements.hub')();
+topbar = require('elements.topbar')();
+tagswitcher = require('elements.tagswitch')();
+lockscreen = require('elements.lockscreen')();
+
+awful.spawn.with_line_callback(vars.commands.lock, {
+  stdout = function() lockscreen.lock() end
+});
+
+os.execute('sleep 0.1');
+topbar.show();
