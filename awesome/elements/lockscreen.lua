@@ -91,7 +91,7 @@ function make_splash()
   
   local box = wibox({
     type = 'splash',
-    bg = vars.global.b..'cc',
+    bg = vars.global.f,
     --bgimage = vars.global.lock,
     width = w, height = h,
     x = 0, y = 0,

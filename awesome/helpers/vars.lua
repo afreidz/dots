@@ -4,10 +4,10 @@ local xrdb = beautiful.xresources.get_current_theme();
 
 return {
   global = {
-    f = xrdb.color7.."75",
-    f2 = xrdb.color7..'D9',
+    f = "#C9DDFC80",
+    f2 = '#C9DDFC99',
     t = "#00000000",
-    b = "#000000",
+    b = "#333538",
     m = 10,
     r = 7,
     o = 0.35,
@@ -78,6 +78,8 @@ return {
     media = '󰝚',
     theme = '󰸌',
     down = '󰳜',
+    close = '󰅖',
+    clear = '󰎟',
   },
   commands = {
     getwall = gears.filesystem.get_configuration_dir()..'helpers/wall.sh',

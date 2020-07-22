@@ -95,6 +95,20 @@ return function()
   title.font = vars.fonts.tlb;
   title.forced_height = vars.hub.i + vars.global.m + vars.global.m;
 
+  local close = wibox.widget.textbox(vars.icons.close);
+  close.font = vars.fonts.il;
+  close.forced_height = vars.hub.i;
+  close:buttons(gears.table.join(
+    awful.button({}, 1, function() if root.hub then root.hub.close() end end)
+  ));
+
+  local clear = wibox.widget.textbox(vars.icons.clear);
+  clear.font = vars.fonts.il;
+  clear.forced_height = vars.hub.i;
+  clear:buttons(gears.table.join(
+    awful.button({}, 1, function() naughty.destroy_all_notifications() end)
+  ));
+
   local container = wibox.layout.fixed.vertical();
   container.forced_width = vars.hub.w - vars.hub.nw - (vars.global.m*4);
   container.forced_height = vars.hub.h - (vars.global.m*3) - vars.hub.i;
@@ -133,8 +147,13 @@ return function()
     {
       layout = wibox.layout.align.vertical,
       {
-        layout = wibox.container.place,
-        title,
+        layout = wibox.layout.align.horizontal,
+        clear,
+        {
+          layout = wibox.container.place,
+          title
+        },
+        close
       },
       {
         layout = wibox.container.place,

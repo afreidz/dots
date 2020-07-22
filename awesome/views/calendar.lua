@@ -17,6 +17,13 @@ return function()
   title.font = vars.fonts.tlb;
   title.forced_height = vars.hub.i + vars.global.m + vars.global.m;
 
+  local close = wibox.widget.textbox(vars.icons.close);
+  close.font = vars.fonts.il;
+  close.forced_height = vars.hub.i;
+  close:buttons(gears.table.join(
+    awful.button({}, 1, function() if root.hub then root.hub.close() end end)
+  ));
+
   local cal_container = wibox.container.background();
   cal_container.bg = vars.global.f2;
   cal_container.shape = rounded();
@@ -39,8 +46,13 @@ return function()
     {
       layout = wibox.layout.align.vertical,
       {
-        layout = wibox.container.place,
-        title,
+        layout = wibox.layout.align.horizontal,
+        nil,
+        {
+          layout = wibox.container.place,
+          title
+        },
+        close
       },
       {
         layout = wibox.container.place,

@@ -58,8 +58,8 @@ function make_taglist(s)
   });
 
   local buttons = gears.table.join(
-    awful.button({ 'Mod4' }, 1, function(t) t:view_only() end),
-    awful.button({ 'Mod4' }, 3, delete_tag)
+    awful.button({ 'Mod4' }, 1, function(t) t:view_only() end)
+    --awful.button({ 'Mod4' }, 3, delete_tag)
   );
 
   local taglist = awful.widget.taglist({

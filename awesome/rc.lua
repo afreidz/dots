@@ -33,9 +33,9 @@ end);
 local tags = require('helpers.tags');
 screen.connect_signal('request::desktop_decoration', function(s)
 	if s.index == 1 then
-		awful.tag({ tags[1], tags[2] }, s, awful.layout.layouts[1]);
+		awful.tag({ tags[1] }, s, awful.layout.layouts[1]);
 	else
-		awful.tag({ tags[3], tags[4] }, s, awful.layout.layouts[1]);
+		awful.tag({ tags[2] }, s, awful.layout.layouts[1]);
 	end
 	s.tags[1]:view_only();
 end);

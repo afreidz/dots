@@ -16,6 +16,13 @@ return function()
   title.font = vars.fonts.tlb;
   title.forced_height = vars.hub.i + vars.global.m + vars.global.m;
 
+  local close = wibox.widget.textbox(vars.icons.close);
+  close.font = vars.fonts.il;
+  close.forced_height = vars.hub.i;
+  close:buttons(gears.table.join(
+    awful.button({}, 1, function() if root.hub then root.hub.close() end end)
+  ));
+
   local graph = wibox.container.background();
   graph.bg = vars.global.f2;
   graph.shape = rounded();
@@ -188,8 +195,13 @@ return function()
     {
       layout = wibox.layout.fixed.vertical,
       {
-        layout = wibox.container.place,
-        title,
+        layout = wibox.layout.align.horizontal,
+        nil,
+        {
+          layout = wibox.container.place,
+          title
+        },
+        close
       },
       {
         layout = wibox.container.place,
