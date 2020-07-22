@@ -20,6 +20,7 @@ function enable_view_by_index(i)
     close_views();
     views[i].view.visible = true;
     views[i].title.font = vars.fonts.tlb;
+    if views[i].view.refresh then views[i].view.refresh() end
   end
 end 
 
@@ -62,6 +63,7 @@ function make_view(i, t, v, a)
       close_views();
       view.visible = true;
       title.font = vars.fonts.tlb;
+      if view.refresh then view.refresh() end;
     end)
   ));
   button:setup {
@@ -119,9 +121,8 @@ function make_nav()
   table.insert(views, make_view(vars.icons.date, "calendar", require('views.calendar')()));
   table.insert(views, make_view(vars.icons.web, "connections", require('views.connections')()));
   table.insert(views, make_view(vars.icons.system, "system", require('views.system')()));
-  table.insert(views, make_view(vars.icons.display, "display"));
+  table.insert(views, make_view(vars.icons.display, "display", require('views.display')()));
   table.insert(views, make_view(vars.icons.media, "media"));
-  table.insert(views, make_view(vars.icons.theme, "customization"));
 
   local header = wibox.container.margin();
   header.margins = vars.global.m;

@@ -90,7 +90,11 @@ return function()
 
   graph:setup {
     layout = wibox.layout.align.vertical,
-    wibox.widget.base.empty_widget(),
+    {
+      layout = wibox.container.margin,
+      top = vars.global.m,
+      wibox.widget.base.empty_widget(),
+    },
     {
       layout = wibox.layout.align.horizontal,
       {
@@ -144,6 +148,9 @@ return function()
   pac.bg = xrdb.color12;
   pac.fg = xrdb.foreground;
   pac.shape = rounded();
+  pac:buttons(gears.table.join(
+    awful.button({}, 1, function() awful.spawn(vars.commands.software) end)
+  ));
 
   local pac_icon = wibox.widget.textbox(vars.icons.pac);
   pac_icon.font = vars.fonts.il;
@@ -203,12 +210,12 @@ return function()
     }
   }
 
-  awful.widget.watch(vars.commands.ramcmd, 2, function(w,o)
+  awful.widget.watch(vars.commands.ramcmd, 5, function(w,o)
     ram_progress:set_value(tonumber(o));
     ram_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
   end);
 
-  awful.widget.watch(vars.commands.cpucmd, 2, function(w,o,e,r,c)
+  awful.widget.watch(vars.commands.cpucmd, 5, function(w,o,e,r,c)
     cpu_progress:set_value(tonumber(o));
     cpu_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
   end);
@@ -219,14 +226,16 @@ return function()
     disk_value.text = val.."%";
   end);
 
-  awful.widget.watch(vars.commands.updatescmd, 5, function(w,o)
-    local n = tonumber(o);
-    if n <= 0 then pac_value.text = 'none available' else pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' end
-  end);
-
   awful.widget.watch(vars.commands.proccmd, 5, function(w, o)
     proc_text.text = o;
   end);
+
+  view.refresh = function()
+    awful.widget.watch(vars.commands.updatescmd, 5, function(w,o)
+      local n = tonumber(o);
+      if n <= 0 then pac_value.text = 'none available' else pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' end
+    end);
+  end
 
   return view;
 end

@@ -31,6 +31,9 @@ return {
     txxlb = "SF Pro Rounded Semibold 25",
     mlb = "Operator Mono Lig Bold 12",
     mll = "Operator Mono Lig Light 12",
+    m = "Operator Mono Lig",
+    t = "SF Pro Rounded",
+    i = "MaterialDesignIconsDesktop",
   },
   lock = {
     w = 400,
@@ -78,6 +81,7 @@ return {
   },
   commands = {
     getwall = gears.filesystem.get_configuration_dir()..'helpers/wall.sh',
+    resize = gears.filesystem.get_configuration_dir()..'helpers/resize.sh',
     cpucmd = gears.filesystem.get_configuration_dir()..'helpers/cpu.sh',
     ramcmd = gears.filesystem.get_configuration_dir()..'helpers/ram.sh',
     diskcmd = gears.filesystem.get_configuration_dir()..'helpers/disk.sh',
@@ -86,16 +90,26 @@ return {
     btup = gears.filesystem.get_configuration_dir()..'helpers/btup.sh',
     btdevices = gears.filesystem.get_configuration_dir()..'helpers/btdevices.sh',
     btdevice = gears.filesystem.get_configuration_dir()..'helpers/btdevice.sh',
-    idle = 'bash -c "xidlehook --not-when-audio --timer 900 \'echo lock\' \'\' "',
-    proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%mem | head -n 6"',
+    idle = 'bash -c "xidlehook --not-when-audio --timer 900 \'echo lock\' \'\' --timer 60 \'systemctl suspend\' \'\'"',
+    proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%mem,-%cpu | head -n 6"',
     synccmd = 'bash -c "yay -Syy"',
     updatescmd = 'bash -c "yay -Sup | wc -l"',
     ismuted = 'bash -c "pamixer --get-mute | diff <(echo \"true\") -"',
     vol = 'bash -c "pamixer --get-volume"',
     ssid = 'bash -c "iwgetid -r"',
+    setwall = 'nitrogen',
+    browser = "brave-beta",
+    editor = "code",
+    terminal = "urxvt",
+    files = "nautilus",
+    rofi = "rofi -show drun -theme config-global",
+    software = "pamac-manager"
   },
   notifications = {
     active = {},
     w = 200,
   },
+  display = {
+    sw = 120,
+  }
 };

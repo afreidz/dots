@@ -26,7 +26,7 @@ function unlock(pwd)
       locker.callback();
       locker.callback = nil;
     else
-      mouse.current_client:raise();
+      if mouse.current_client then mouse.current_client:raise() end;
     end
   else
     return prompt();

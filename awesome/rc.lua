@@ -20,13 +20,6 @@ beautiful.useless_gap = 5;
 -- MODKEY
 modkey = 'Mod4';
 
--- APPS
-browser = "brave-beta";
-editor = "code";
-terminal = "urxvt";
-files = "nautilus";
-rofi = "rofi -show drun -theme config-global"; 
-
 -- LAYOUTS
 tag.connect_signal('request::default_layouts', function()
 	awful.layout.append_default_layouts({
@@ -49,13 +42,14 @@ end);
 
 --GLOBAL KEYBINDS/BUTTONS
 awful.keyboard.append_global_keybindings({
-	awful.key({ modkey }, "Return", function() awful.spawn(terminal) end),
-	awful.key({ modkey }, "c", function() awful.spawn(editor) end),
-	awful.key({ modkey }, "w", function() awful.spawn(browser) end),
-	awful.key({ modkey }, "f", function() awful.spawn(files) end),
-	awful.key({ modkey }, "space", function() awful.spawn(rofi) end),
+	awful.key({ modkey }, "Return", function() awful.spawn(vars.commands.terminal) end),
+	awful.key({ modkey }, "c", function() awful.spawn(vars.commands.editor) end),
+	awful.key({ modkey }, "w", function() awful.spawn(vars.commands.browser) end),
+	awful.key({ modkey }, "f", function() awful.spawn(vars.commands.files) end),
+	awful.key({ modkey }, "space", function() awful.spawn(vars.commands.rofi) end),
 	
-	awful.key({ modkey, "Shift" }, "r", function() if lockscreen then lockscreen.lock(awesome.restart) end end),
+	awful.key({ modkey, "Shift" }, "r", awesome.restart),
+	-- awful.key({ modkey, "Shift" }, "r", function() if lockscreen then lockscreen.lock(awesome.restart) end end),
 	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
 	awful.key({ modkey, "Shift" }, "l", function() if lockscreen then lockscreen.lock() end end),
 	
