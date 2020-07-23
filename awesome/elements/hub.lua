@@ -122,7 +122,7 @@ function make_nav()
   table.insert(views, make_view(config.icons.web, "connections", require('views.connections')()));
   table.insert(views, make_view(config.icons.system, "system", require('views.system')()));
   table.insert(views, make_view(config.icons.display, "display", require('views.display')()));
-  table.insert(views, make_view(config.icons.media, "media"));
+  table.insert(views, make_view(config.icons.media, "media", require('views.media')()));
 
   local header = wibox.container.margin();
   header.margins = config.global.m;

@@ -7,6 +7,7 @@ return {
     m = 10,
     r = 7,
     o = 0.35,
+    slider = 30,
     user = gears.filesystem.get_configuration_dir()..'/helpers/andy-emoji-linicorn.png',
   },
   colors = {
@@ -102,8 +103,14 @@ return {
     clear = '󰎟',
     lock = '󰍁',
     unlock = '󰍀',
+    play = '󰐌',
+    pause = '󰏥',
+    next = '󰒭',
+    prev = '󰒮',
+    spot = '󰓇',
   },
   commands = {
+    art = gears.filesystem.get_configuration_dir()..'helpers/albumart.sh',
     getwall = gears.filesystem.get_configuration_dir()..'helpers/wall.sh',
     resize = gears.filesystem.get_configuration_dir()..'helpers/resize.sh',
     cpucmd = gears.filesystem.get_configuration_dir()..'helpers/cpu.sh',
@@ -120,14 +127,24 @@ return {
     updatescmd = 'bash -c "yay -Sup | wc -l"',
     ismuted = 'bash -c "pamixer --get-mute | diff <(echo \"true\") -"',
     vol = 'bash -c "pamixer --get-volume"',
+    setvol = 'pamixer --set-volume ',
+    mute = 'bash -c "pamixer -t"',
     ssid = 'bash -c "iwgetid -r"',
     setwall = 'nitrogen',
     browser = "brave-beta",
     editor = "code",
     terminal = "urxvt",
     files = "nautilus",
+    spotify = "spotify",
     rofi = "rofi -show drun -theme config-global",
-    software = "pamac-manager"
+    software = "pamac-manager",
+    pause = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause",
+    play = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play",
+    next = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next",
+    prev = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous",
+    artist = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --artist | jq .artist",
+    song = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --song | jq .song",
+    album = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --album | jq .album",
   },
   notifications = {
     active = {},
@@ -135,5 +152,8 @@ return {
   },
   display = {
     sw = 120,
+  },
+  media = {
+    cover = gears.filesystem.get_configuration_dir()..'tmp/media/cover.jpg',
   }
 };

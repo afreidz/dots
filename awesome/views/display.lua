@@ -136,7 +136,7 @@ return function()
         for k,v in pairs(screens) do
           layout:insert(k,wibox.widget.base.empty_widget());
           awful.spawn.easy_async_with_shell(config.commands.resize..' '..v..' '..mon_size.w..' '..mon_size.h..' '..k, function(o)
-            layout:set(k, make_mon('tmp/wall_'..k..'.jpg', k));
+            layout:set(k, make_mon('tmp/display/wall_'..k..'.jpg', k));
           end);
         end
       end

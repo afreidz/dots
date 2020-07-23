@@ -179,7 +179,7 @@ function make_utility(s)
   awful.widget.watch(config.commands.ismuted, 1, function(w,o,e,r,c)
     if c == 0 then vol.icon.text = config.icons.vol_mute else
       awful.spawn.easy_async_with_shell(config.commands.vol, function(o,e)
-        if e then return end
+        if e ~= '' then return end
         local v = tonumber(o);
         if v >= 75 then vol.icon.text = config.icons.vol_3 elseif v >= 50 then vol.icon.text = config.icons.vol_2 else vol.icon.text = config.icons.vol_1 end;
       end);
