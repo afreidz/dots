@@ -5,13 +5,13 @@ local naughty = require('naughty');
 local rounded = require('helpers.rounded');
 local beautiful = require('beautiful');
 local xrdb = beautiful.xresources.get_current_theme();
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 
-local m = vars.global.m;
-local b = vars.global.b;
-local f = vars.global.f;
-local f2 = vars.global.f2;
-local h = vars.tagswitcher.h;
+local m = config.global.m;
+local b = config.colors.b;
+local f = config.colors.f;
+local f2 = config.colors.f;
+local h = config.tagswitcher.h;
 local tags = require('helpers.tags');
 
 function toggle_tag_switcher()
@@ -67,8 +67,8 @@ function make_taglist(s)
     buttons = buttons,
     filter = awful.widget.taglist.filter.all,
     style = {
-      fg_focus = xrdb.foreground,
-      bg_focus = xrdb.color4,
+      fg_focus = config.colors.w,
+      bg_focus = config.colors.x4,
       shape_focus = rounded(),
     },
     widget_template = {

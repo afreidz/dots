@@ -3,46 +3,46 @@ local awful = require('awful');
 local wibox = require('wibox');
 local gears = require('gears');
 local naughty = require('naughty');
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
 
 return function()
   local view = wibox.container.margin();
-  view.left = vars.global.m;
-  view.right = vars.global.m;
+  view.left = config.global.m;
+  view.right = config.global.m;
 
   local title = wibox.widget.textbox("Calendar");
-  title.font = vars.fonts.tlb;
-  title.forced_height = vars.hub.i + vars.global.m + vars.global.m;
+  title.font = config.fonts.tlb;
+  title.forced_height = config.hub.i + config.global.m + config.global.m;
 
-  local close = wibox.widget.textbox(vars.icons.close);
-  close.font = vars.fonts.il;
-  close.forced_height = vars.hub.i;
+  local close = wibox.widget.textbox(config.icons.close);
+  close.font = config.fonts.il;
+  close.forced_height = config.hub.i;
   close:buttons(gears.table.join(
     awful.button({}, 1, function() if root.hub then root.hub.close() end end)
   ));
 
   local cal_container = wibox.container.background();
-  cal_container.bg = vars.global.f2;
+  cal_container.bg = config.colors.f;
   cal_container.shape = rounded();
-  cal_container.forced_width = vars.hub.w - vars.hub.nw - (vars.global.m*4);
-  cal_container.forced_height = vars.hub.w - vars.hub.nw - (vars.global.m*4);
+  cal_container.forced_width = config.hub.w - config.hub.nw - (config.global.m*4);
+  cal_container.forced_height = config.hub.w - config.hub.nw - (config.global.m*4);
 
   cal_container:setup {
     layout = wibox.container.margin,
-    left = vars.global.m, right = 40,
+    left = config.global.m, right = 40,
     {
       date = os.date('*t'),
-      font = vars.fonts.tml,
+      font = config.fonts.tml,
       widget = wibox.widget.calendar.month,
     }
   }
 
   view:setup {
     layout = wibox.container.background,
-    fg = vars.global.b,
+    fg = config.colors.b,
     {
       layout = wibox.layout.align.vertical,
       {

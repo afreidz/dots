@@ -5,16 +5,16 @@ local naughty = require('naughty');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 
-local h = vars.topbar.h;
-local w = vars.topbar.w;
-local r = vars.global.r;
-local m = vars.global.m;
-local o = vars.global.o;
-local f = vars.global.f;
-local t = vars.global.t;
-local b = vars.global.b;
+local h = config.topbar.h;
+local w = config.topbar.w;
+local r = config.global.r;
+local m = config.global.m;
+local o = config.global.o;
+local f = config.colors.f;
+local t = config.colors.t;
+local b = config.colors.b;
 
 function make_launcher(s)
   local container = wibox({ 
@@ -26,14 +26,14 @@ function make_launcher(s)
     bg = t,
   });
 
-  local icon = wibox.widget.textbox(vars.icons.arch);
-  icon.font = vars.fonts.im;
+  local icon = wibox.widget.textbox(config.icons.arch);
+  icon.font = config.fonts.im;
   icon.valign = "center";
   icon.align = "center";
 
   local button = wibox.container.background();
-  button.bg = xrdb.color4;
-  button.fg = xrdb.foreground;
+  button.bg = config.colors.x4;
+  button.fg = config.colors.w;
   button.widget = icon;
   --button.shape = rounded();
 
@@ -61,14 +61,14 @@ function make_power(s)
     bg = t,
   });
 
-  local icon = wibox.widget.textbox(vars.icons.power);
-  icon.font = vars.fonts.im;
+  local icon = wibox.widget.textbox(config.icons.power);
+  icon.font = config.fonts.im;
   icon.valign = "center";
   icon.align = "center";
 
   local button = wibox.container.background();
-  button.bg = xrdb.color9;
-  button.fg = xrdb.foreground;
+  button.bg = config.colors.x9;
+  button.fg = config.colors.w;
   button.widget = icon;
   --button.shape = rounded();
 
@@ -98,9 +98,9 @@ function make_date(s)
   });
 
   local clock = wibox.widget.textclock();
-  clock.font = vars.fonts.tlb;
+  clock.font = config.fonts.tlb;
   clock.refresh = 60;
-  clock.format = vars.icons.date..' %a, %b %-d   <span font="'..vars.fonts.tll..'">'..vars.icons.time..' %-I:%M %p</span>';
+  clock.format = config.icons.date..' %a, %b %-d   <span font="'..config.fonts.tll..'">'..config.icons.time..' %-I:%M %p</span>';
 
   date.x = ((s.workarea.width - (w+m+m)) + s.workarea.x) - dw;
   date.y = m;
@@ -113,7 +113,7 @@ function make_date(s)
   };
 
   date:buttons(gears.table.join(awful.button({ }, 1, function()
-    root.hub.x = (s.workarea.width - vars.hub.w - m) + s.workarea.x;
+    root.hub.x = (s.workarea.width - config.hub.w - m) + s.workarea.x;
     root.hub.visible = true;
     root.hub.enable_view_by_index(2);
   end)));
@@ -148,13 +148,13 @@ function make_utility(s)
     return { icon = icon, container = container, widget = container };
   end
 
-  local wifi = make_icon(vars.icons.wifi);
-  local bt = make_icon(vars.icons.bt);
-  local vol = make_icon(vars.icons.vol_1);
-  local pac = make_icon(vars.icons.pac);
-  local mem = make_icon(vars.icons.mem);
-  local lan = make_icon(vars.icons.lan);
-  local note = make_icon(vars.icons.note);
+  local wifi = make_icon(config.icons.wifi);
+  local bt = make_icon(config.icons.bt);
+  local vol = make_icon(config.icons.vol_1);
+  local pac = make_icon(config.icons.pac);
+  local mem = make_icon(config.icons.mem);
+  local lan = make_icon(config.icons.lan);
+  local note = make_icon(config.icons.note);
 
   wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
   bt.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
@@ -164,41 +164,41 @@ function make_utility(s)
   lan.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(3) end)));
   note.widget:buttons(gears.table.join(awful.button({}, 1, function() root.hub.enable_view_by_index(1) end)));
 
-  awful.widget.watch(vars.commands.wifiup, 2, function(w,o,e,r,c)
-    if c == 0 then wifi.icon.text = vars.icons.wifi else wifi.icon.text = vars.icons.wifix end;
+  awful.widget.watch(config.commands.wifiup, 2, function(w,o,e,r,c)
+    if c == 0 then wifi.icon.text = config.icons.wifi else wifi.icon.text = config.icons.wifix end;
   end);
 
-  awful.widget.watch(vars.commands.btup, 2, function(w,o,e,r,c)
-    if c == 0 then bt.icon.text = vars.icons.bt else bt.icon.text = vars.icons.btx end;
+  awful.widget.watch(config.commands.btup, 2, function(w,o,e,r,c)
+    if c == 0 then bt.icon.text = config.icons.bt else bt.icon.text = config.icons.btx end;
   end);
 
-  awful.widget.watch(vars.commands.lanup, 2, function(w,o,e,r,c)
-    if c == 0 then lan.icon.text = vars.icons.lan else lan.icon.text = vars.icons.lanx end;
+  awful.widget.watch(config.commands.lanup, 2, function(w,o,e,r,c)
+    if c == 0 then lan.icon.text = config.icons.lan else lan.icon.text = config.icons.lanx end;
   end);
 
-  awful.widget.watch(vars.commands.ismuted, 1, function(w,o,e,r,c)
-    if c == 0 then vol.icon.text = vars.icons.vol_mute else
-      awful.spawn.easy_async_with_shell(vars.commands.vol, function(o,e)
+  awful.widget.watch(config.commands.ismuted, 1, function(w,o,e,r,c)
+    if c == 0 then vol.icon.text = config.icons.vol_mute else
+      awful.spawn.easy_async_with_shell(config.commands.vol, function(o,e)
         if e then return end
         local v = tonumber(o);
-        if v >= 75 then vol.icon.text = vars.icons.vol_3 elseif v >= 50 then vol.icon.text = vars.icons.vol_2 else vol.icon.text = vars.icons.vol_1 end;
+        if v >= 75 then vol.icon.text = config.icons.vol_3 elseif v >= 50 then vol.icon.text = config.icons.vol_2 else vol.icon.text = config.icons.vol_1 end;
       end);
     end
   end);
 
-  awful.widget.watch(vars.commands.ramcmd, 5, function(w,o,e,r,c)
+  awful.widget.watch(config.commands.ramcmd, 5, function(w,o,e,r,c)
     local n = tonumber(o);
-    if n >= 75 then mem.container.fg = xrdb.color9 elseif n >= 50 then mem.container.fg = xrdb.color11 else mem.container.fg = xrdb.color10 end;
+    if n >= 75 then mem.container.fg = config.colors.x9 elseif n >= 50 then mem.container.fg = config.colors.x11 else mem.container.fg = config.colors.x10 end;
   end);
 
-  awful.widget.watch(vars.commands.synccmd, 60);
-  awful.widget.watch(vars.commands.updatescmd, 10, function(w,o)
+  awful.widget.watch(config.commands.synccmd, 60);
+  awful.widget.watch(config.commands.updatescmd, 10, function(w,o)
     local n = tonumber(o);
-    if n > 0 then pac.container.fg = xrdb.color10 else pac.container.fg = xrdb.foreground end;
+    if n > 0 then pac.container.fg = config.colors.x10 else pac.container.fg = config.colors.w end;
   end);
 
   awful.widget.watch('echo 1', 1, function(w,o)
-    if #vars.notifications.active > 0 then note.container.fg = xrdb.color10 else note.container.fg = xrdb.foreground end;
+    if #config.notifications.active > 0 then note.container.fg = config.colors.x10 else note.container.fg = config.colors.w end;
   end);
 
   local sep = wibox.widget.textbox("|");
@@ -226,7 +226,7 @@ function make_utility(s)
   utility.y = m;
   utility.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;
   utility:buttons(gears.table.join(awful.button({ }, 1, function()
-    root.hub.x = ((s.workarea.width / 2) - (vars.hub.w/2)) + s.workarea.x;
+    root.hub.x = ((s.workarea.width / 2) - (config.hub.w/2)) + s.workarea.x;
     root.hub.visible = true;
   end)));
 
@@ -262,7 +262,7 @@ function make_taglist(s)
       {
         id = "text_role",
         widget = wibox.widget.textbox,
-        font = vars.fonts.im,
+        font = config.fonts.im,
       }
     }
   });

@@ -2,7 +2,7 @@ local awful = require('awful');
 local wibox = require('wibox');
 local gears = require('gears');
 local naughty = require('naughty');
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
@@ -11,7 +11,7 @@ local views = {};
 function close_views()
   gears.table.map(function(v)
     v.view.visible = false;
-    v.title.font = vars.fonts.tll;
+    v.title.font = config.fonts.tll;
   end, views);
 end
 
@@ -19,26 +19,26 @@ function enable_view_by_index(i)
   if views[i] then 
     close_views();
     views[i].view.visible = true;
-    views[i].title.font = vars.fonts.tlb;
+    views[i].title.font = config.fonts.tlb;
     if views[i].view.refresh then views[i].view.refresh() end
   end
 end 
 
 function make_view(i, t, v, a)
   local button = wibox.container.background();
-  button.forced_height = vars.global.m + vars.hub.i + vars.global.m;
+  button.forced_height = config.global.m + config.hub.i + config.global.m;
 
   local icon = wibox.widget.textbox(i);
-  icon.forced_height = vars.hub.i;
-  icon.forced_width = vars.hub.i;
+  icon.forced_height = config.hub.i;
+  icon.forced_width = config.hub.i;
   icon.align = "center";
-  icon.font = vars.fonts.il;
+  icon.font = config.fonts.il;
 
   local title = wibox.widget.textbox(t);
-  if a == nil then title.font = vars.fonts.tll else title.font = vars.fonts.tllb end;
+  if a == nil then title.font = config.fonts.tll else title.font = config.fonts.tllb end;
 
   local view = wibox.container.margin();
-  view.margins = vars.global.m;
+  view.margins = config.global.m;
   if a == nil then view.visible = false else view.visible = true end;
 
   if(v == nil) then
@@ -48,7 +48,7 @@ function make_view(i, t, v, a)
       halign = "center",
       {
         layout = wibox.container.background,
-        fg = vars.global.b,
+        fg = config.colors.b,
         wibox.widget.textbox(t),
       }
     }
@@ -56,25 +56,25 @@ function make_view(i, t, v, a)
     view = v;
   end
 
-  button:connect_signal("mouse::enter", function() button.bg = vars.global.f end);
-  button:connect_signal("mouse::leave", function() button.bg = vars.global.t end);
+  button:connect_signal("mouse::enter", function() button.bg = config.colors.f end);
+  button:connect_signal("mouse::leave", function() button.bg = config.colors.t end);
   button:buttons(gears.table.join(
     awful.button({ }, 1, function()
       close_views();
       view.visible = true;
-      title.font = vars.fonts.tlb;
+      title.font = config.fonts.tlb;
       if view.refresh then view.refresh() end;
     end)
   ));
   button:setup {
     layout = wibox.container.margin,
-    margins = vars.global.m,
+    margins = config.global.m,
     {
       layout = wibox.layout.align.horizontal,
       icon,
       {
         layout = wibox.container.margin,
-        left = vars.global.m,
+        left = config.global.m,
         title
       },
     }
@@ -87,67 +87,67 @@ function make_nav()
   local navbg = gears.color({
     type = 'linear',
     from = { 0, 0 },
-    to = { vars.hub.nw, vars.hub.h },
-    stops = { { 0, xrdb.color4 }, { 1, xrdb.color12 } }
+    to = { config.hub.nw, config.hub.h },
+    stops = { { 0, config.colors.x4 }, { 1, config.colors.x12 } }
   });
 
   local nav = wibox.container.background();
   nav.bg = navbg;
-  nav.forced_width = vars.hub.nw;
+  nav.forced_width = config.hub.nw;
 
   local user = wibox.widget.textbox("");
-  user.font = vars.fonts.tlb;
+  user.font = config.fonts.tlb;
   awful.spawn.easy_async_with_shell('whoami', function(u) user.text = u:gsub("^%s*(.-)%s*$", "%1") end);
 
   local avatar = wibox.widget {
     layout = wibox.container.background,
     shape = gears.shape.circle,
     shape_clip = gears.shape.circle,
-    forced_width = vars.hub.i,
-    forced_height = vars.hub.i,
+    forced_width = config.hub.i,
+    forced_height = config.hub.i,
     {
       widget = wibox.widget.imagebox,
-      image = vars.global.user,
+      image = config.global.user,
       resize = true,
     }
   }
 
   local rule = wibox.container.background();
   rule.forced_height = 1;
-  rule.bg = vars.global.f;
+  rule.bg = config.colors.f;
   rule.widget = wibox.widget.base.empty_widget();
 
-  table.insert(views, make_view(vars.icons.note, "notifications", require('views.notifications')()));
-  table.insert(views, make_view(vars.icons.date, "calendar", require('views.calendar')()));
-  table.insert(views, make_view(vars.icons.web, "connections", require('views.connections')()));
-  table.insert(views, make_view(vars.icons.system, "system", require('views.system')()));
-  table.insert(views, make_view(vars.icons.display, "display", require('views.display')()));
-  table.insert(views, make_view(vars.icons.media, "media"));
+  table.insert(views, make_view(config.icons.note, "notifications", require('views.notifications')()));
+  table.insert(views, make_view(config.icons.date, "calendar", require('views.calendar')()));
+  table.insert(views, make_view(config.icons.web, "connections", require('views.connections')()));
+  table.insert(views, make_view(config.icons.system, "system", require('views.system')()));
+  table.insert(views, make_view(config.icons.display, "display", require('views.display')()));
+  table.insert(views, make_view(config.icons.media, "media"));
 
   local header = wibox.container.margin();
-  header.margins = vars.global.m;
-  header.forced_height = vars.global.m + vars.hub.i + vars.global.m;
+  header.margins = config.global.m;
+  header.forced_height = config.global.m + config.hub.i + config.global.m;
   header:setup {
     layout = wibox.layout.align.horizontal,
     {
       layout = wibox.container.margin,
-      right = vars.global.m,
+      right = config.global.m,
       avatar,
     },
     user
   };
 
   local nav_container = wibox.layout.fixed.vertical();
-  nav_container.forced_width = vars.hub.nw;
-  nav_container.forced_height = vars.hub.h;
+  nav_container.forced_width = config.hub.nw;
+  nav_container.forced_height = config.hub.h;
   nav_container:add(header);
   nav_container:add(rule);
   gears.table.map(function(v) nav_container:add(v.link) end, views);
 
   local power = wibox.container.background();
-  power.bg = xrdb.color1;
+  power.bg = config.colors.x1;
   power.shape = rounded();
-  power.forced_height = vars.hub.i;
+  power.forced_height = config.hub.i;
   power:setup {
     layout = wibox.container.place,
     halign = "center",
@@ -155,7 +155,7 @@ function make_nav()
     {
       widget = wibox.widget.textbox,
       text = '󰐥',
-      font = vars.fonts.il,
+      font = config.fonts.il,
     }
   };
 
@@ -167,7 +167,7 @@ function make_nav()
       nav_container,
       {
         layout = wibox.container.margin,
-        margins = vars.global.m,
+        margins = config.global.m,
         power,
       }
     }
@@ -179,11 +179,11 @@ end
 return function()
   local hub = wibox({
     type = 'toolbar',
-    width = vars.hub.w,
-    height = vars.hub.h,
+    width = config.hub.w,
+    height = config.hub.h,
     visible = false,
     ontop = true,
-    bg = vars.global.f,
+    bg = config.colors.f,
     screen = awful.screen.primary,
   });
 

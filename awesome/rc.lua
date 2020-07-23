@@ -4,7 +4,7 @@ local awful = require('awful');
 local wibox = require('wibox');
 local ruled = require('ruled');
 local naughty = require('naughty');
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 local beautiful = require('beautiful');
 require('./errors')();
 
@@ -42,11 +42,11 @@ end);
 
 --GLOBAL KEYBINDS/BUTTONS
 awful.keyboard.append_global_keybindings({
-	awful.key({ modkey }, "Return", function() awful.spawn(vars.commands.terminal) end),
-	awful.key({ modkey }, "c", function() awful.spawn(vars.commands.editor) end),
-	awful.key({ modkey }, "w", function() awful.spawn(vars.commands.browser) end),
-	awful.key({ modkey }, "f", function() awful.spawn(vars.commands.files) end),
-	awful.key({ modkey }, "space", function() awful.spawn(vars.commands.rofi) end),
+	awful.key({ modkey }, "Return", function() awful.spawn(config.commands.terminal) end),
+	awful.key({ modkey }, "c", function() awful.spawn(config.commands.editor) end),
+	awful.key({ modkey }, "w", function() awful.spawn(config.commands.browser) end),
+	awful.key({ modkey }, "f", function() awful.spawn(config.commands.files) end),
+	awful.key({ modkey }, "space", function() awful.spawn(config.commands.rofi) end),
 	
 	awful.key({ modkey, "Shift" }, "r", awesome.restart),
 	-- awful.key({ modkey, "Shift" }, "r", function() if lockscreen then lockscreen.lock(awesome.restart) end end),
@@ -87,10 +87,10 @@ awful.mouse.append_global_mousebindings({
 	awful.button({}, 1, function() if hub then hub.close() end end),
 	awful.button({}, 3, function()
 		local s = awful.screen.focused();
-		local h = s.hub
+		local h = root.hub
 		h.visible = true;
-		h.enable_view_by_index(1);
-		h.x = (s.workarea.width - vars.hub.w - vars.global.m) + s.workarea.x;		
+		h.enable_view_by_index(5);
+		h.x = ((s.workarea.width / 2) - (config.hub.w/2)) + s.workarea.x;		
 	end)
 });
 
@@ -142,7 +142,7 @@ topbar = require('elements.topbar')();
 tagswitcher = require('elements.tagswitch')();
 lockscreen = require('elements.lockscreen')();
 
-awful.spawn.with_line_callback(vars.commands.idle, {
+awful.spawn.with_line_callback(config.commands.idle, {
   stdout = function() lockscreen.lock() end
 });
 

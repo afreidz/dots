@@ -4,7 +4,7 @@ local wibox = require('wibox');
 local gears = require('gears');
 local pam = require('liblua_pam');
 local naughty = require('naughty');
-local vars = require('helpers.vars');
+local config = require('helpers.config');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
@@ -38,8 +38,8 @@ function lock(cb)
 
   if locker.panel.widget and locker.splash.layout then
     locker.splash.layout:move_widget(locker.panel.widget, {
-      x = ((s.geometry.width/2) - vars.lock.w/2) + s.geometry.x,
-      y = ((s.geometry.height/2) - vars.lock.h/2) + s.geometry.y,
+      x = ((s.geometry.width/2) - config.lock.w/2) + s.geometry.x,
+      y = ((s.geometry.height/2) - config.lock.h/2) + s.geometry.y,
     });
   end
 
@@ -53,6 +53,7 @@ end
 
 function reset()
   if locker.panel and locker.prompt then 
+    locker.panel.button.text = config.icons.lock;
     locker.panel.layout:remove_widgets(locker.prompt.widget);
     locker.open = false;
   end
@@ -67,10 +68,12 @@ function prompt()
   locker.prompt = make_prompt();
   locker.panel.layout:add(locker.prompt.widget);
 
+  locker.panel.button.text = config.icons.unlock;
+
   awful.prompt.run {
     textbox = locker.prompt.textbox,
-    bg_cursor = vars.global.b,
-    font = vars.fonts.txlb,
+    bg_cursor = config.colors.b,
+    font = config.fonts.txlb,
     prompt = '',
     exe_callback = unlock,
     done_callback = reset,
@@ -91,8 +94,8 @@ function make_splash()
   
   local box = wibox({
     type = 'splash',
-    bg = vars.global.f,
-    --bgimage = vars.global.lock,
+    bg = config.colors.f,
+    --bgimage = config.global.lock,
     width = w, height = h,
     x = 0, y = 0,
     ontop = true,
@@ -107,32 +110,32 @@ function make_panel()
   local headerbg = gears.color({
     type = 'linear',
     from = { 0, 0 },
-    to = { vars.lock.w, vars.lock.hh },
-    stops = { { 0, xrdb.color4 }, { 1, xrdb.color12 } }
+    to = { config.lock.w, config.lock.hh },
+    stops = { { 0, config.colors.x4 }, { 1, config.colors.x12 } }
   });
 
   local panel = wibox.container.background();
-  panel.forced_width = vars.lock.w;
-  panel.foced_height = vars.lock.h;
-  panel.bg = vars.global.f;
+  panel.forced_width = config.lock.w;
+  panel.foced_height = config.lock.h;
+  panel.bg = config.colors.f;
   panel.shape = rounded();
 
   local header = wibox.container.background();
   header.bg = headerbg;
 
   local avatar = wibox.widget.imagebox();
-  avatar.image = vars.global.user;
+  avatar.image = config.global.user;
   avatar.resize = true;
-  avatar.forced_width = vars.lock.a;
-  avatar.forced_height = vars.lock.a;
-  avatar:set_clip_shape(function(c) return gears.shape.circle(c,vars.lock.a,vars.lock.a) end);
+  avatar.forced_width = config.lock.a;
+  avatar.forced_height = config.lock.a;
+  avatar:set_clip_shape(function(c) return gears.shape.circle(c,config.lock.a,config.lock.a) end);
   
   local user = wibox.widget.textbox();
-  user.font = vars.fonts.tlb;
+  user.font = config.fonts.tlb;
   awful.spawn.easy_async_with_shell('whoami', function(u) user.text = u:gsub("^%s*(.-)%s*$", "%1") end);
 
-  local pbutton = wibox.widget.textbox(vars.icons.down);
-  pbutton.font = vars.fonts.txxlb;
+  local pbutton = wibox.widget.textbox(config.icons.lock);
+  pbutton.font = config.fonts.txxlb;
   pbutton:buttons(gears.table.join(
     awful.button({}, 1, function() prompt() end)
   ));
@@ -141,18 +144,18 @@ function make_panel()
     layout = wibox.layout.align.vertical,
     {
       layout = wibox.container.margin,
-      top = vars.global.m*4,
+      top = config.global.m*4,
       { layout = wibox.container.place, avatar }
     },
     {
       layout = wibox.container.margin,
-      top = vars.global.m,
-      bottom = vars.global.m*2,
+      top = config.global.m,
+      bottom = config.global.m*2,
       { layout = wibox.container.place, user }
     },
     {
       layout = wibox.container.margin,
-      bottom = vars.global.m*2,
+      bottom = config.global.m*2,
       { layout = wibox.container.place, pbutton }
     }
   };
@@ -165,21 +168,21 @@ function make_panel()
     layout
   };
 
-  return { widget = panel, layout = layout }
+  return { widget = panel, layout = layout, button = pbutton }
 end
 
 function make_prompt()
   local prompt = wibox.widget.textbox();
   
   local prompt_container = wibox.container.margin();
-  prompt_container.margins = vars.global.m;
+  prompt_container.margins = config.global.m;
   
   prompt_container:setup {
     layout = wibox.container.background,
-    bg = vars.global.f2,
-    fg = vars.global.b,
+    bg = config.colors.f,
+    fg = config.colors.b,
     shape = rounded(),
-    { layout = wibox.container.margin, margins = vars.global.m, prompt }
+    { layout = wibox.container.margin, margins = config.global.m, prompt }
   };
 
   return { textbox = prompt, widget = prompt_container }
