@@ -17,39 +17,120 @@ function make_spotify(view)
   album_art.resize = true;
   album_art.shape = rounded();
   album_art.clip_shape = rounded();
-  
+
+  local no_album = wibox.widget.textbox(config.icons.spot);
+  no_album.font = config.fonts.i..' 50';
+  no_album:buttons(gears.table.join(
+    awful.button({}, 1, function() awful.spawn.raise_or_spawn(config.commands.spotify) end)
+  ));
+
   local artist = wibox.widget.textbox();
   local song = wibox.widget.textbox();
   local album = wibox.widget.textbox();
+  song.font = config.fonts.tlb;
+  song.forced_height = 20;
+  artist.font = config.fonts.tmb;
+  artist.forced_height = 20;
+  album.font = config.fonts.tml;
+  album.forced_height = 20;
 
-  awful.spawn.easy_async_with_shell(config.commands.artist, function(o) artist.text = o end);
-  awful.spawn.easy_async_with_shell(config.commands.song, function(o) song.text = o end);
-  awful.spawn.easy_async_with_shell(config.commands.album, function(o) album.text = o end);
-  awful.spawn.easy_async_with_shell(config.commands.art, function(o) album_art:set_image(gears.surface.load_uncached(config.media.cover)) end);
+  local play_pause_action = config.commands.play;
 
   local spotify_icon = wibox.widget.textbox(config.icons.spot);
   spotify_icon.font = config.fonts.tlb;
   spotify_icon:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn(config.commands.spotify) end)
+    awful.button({}, 1, function() awful.spawn.raise_or_spawn(config.commands.spotify) end)
   ));
 
-  local play = wibox.widget.textbox(config.icons.play);
+  local play = wibox.widget.textbox();
   play.font = config.fonts.txxlb;
   play:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.easy_async_with_shell(config.commands.play, view.refresh) end)
+    awful.button({}, 1, function() awful.spawn.easy_async_with_shell(play_pause_action, view.refresh) end)
   ));
+  play:connect_signal('mouse::enter', function()
+    play.markup = '<span foreground="'..config.colors.x4..'">'..play.text..'</span>';
+  end);
+  play:connect_signal('mouse::leave', function()
+    play.text = play.text;
+  end);
 
   local next = wibox.widget.textbox(config.icons.next);
-  next.font = config.fonts.txlb;
+  next.font = config.fonts.txxlb;
   next:buttons(gears.table.join(
     awful.button({}, 1, function() awful.spawn.easy_async_with_shell(config.commands.next, view.refresh) end)
   ));
+  next:connect_signal('mouse::enter', function()
+    next.markup = '<span foreground="'..config.colors.x4..'">'..next.text..'</span>';
+  end);
+  next:connect_signal('mouse::leave', function()
+    next.text = next.text;
+  end);
 
   local prev = wibox.widget.textbox(config.icons.prev);
-  prev.font = config.fonts.txlb;
+  prev.font = config.fonts.txxlb;
   prev:buttons(gears.table.join(
     awful.button({}, 1, function() awful.spawn.easy_async_with_shell(config.commands.prev, view.refresh) end)
   ));
+  prev:connect_signal('mouse::enter', function()
+    prev.markup = '<span foreground="'..config.colors.x4..'">'..prev.text..'</span>';
+  end);
+  prev:connect_signal('mouse::leave', function()
+    prev.text = prev.text;
+  end);
+
+  local controls = wibox.widget {
+    layout = wibox.container.margin,
+    margins = config.global.m,
+    {
+      layout = wibox.layout.flex.horizontal,
+      {
+        layout = wibox.container.place,
+        halign = 'right',
+        valign = 'center',
+        prev
+      },
+      {
+        layout = wibox.container.place,
+        halign = 'center',
+        valign = 'center',
+        play
+      },
+      {
+        layout = wibox.container.place,
+        halign = 'left',
+        valign = 'center',
+        next
+      },
+    }
+  };
+
+  awful.spawn.easy_async_with_shell(config.commands.song, function(o,e)
+    if e ~= '' then
+      song.text = "Nothing"
+      artist.text = "Nobody";
+      album.text = "";
+      controls.visible = false;
+      return
+    end 
+    artist.text = o;
+    awful.spawn.easy_async_with_shell(config.commands.isplaying, function(o,e,a,c)
+      if c == 0 then 
+        play.text = config.icons.pause;
+        play_pause_action = config.commands.pause;
+      else
+        play.text = config.icons.play;
+        play_pause_action = config.commands.play;
+      end 
+    end);
+    awful.spawn.easy_async_with_shell(config.commands.song, function(o) song.text = o end);
+    awful.spawn.easy_async_with_shell(config.commands.album, function(o) album.text = o end);
+    awful.spawn.easy_async_with_shell(config.commands.art, function(o)
+      album_art:set_image(gears.surface.load_uncached(o:gsub("^%s*(.-)%s*$", "%1"))); 
+    end);
+  end);
+
+  
+
 
   spot:setup {
     layout = wibox.layout.align.vertical,
@@ -76,43 +157,30 @@ function make_spotify(view)
         layout = wibox.layout.align.horizontal,
         {
           layout = wibox.container.background,
+          shape = rounded(),
           forced_width = 100,
           forced_height = 100,
-          album_art
+          fg = config.colors.b..'40',
+          bg = config.colors.b..'40',
+          {
+            layout = wibox.layout.stack,
+            { layout = wibox.container.place, valign = "center", no_album },
+            album_art,
+          }
         },
         {
-          layout = wibox.layout.fixed.vertical,
-          song,
-          artist,
-          album,
+          layout = wibox.container.margin,
+          margins = config.global.m,
+          {
+            layout = wibox.layout.fixed.vertical,
+            { layout = wibox.container.background, song },
+            { layout = wibox.container.background, artist },
+            { layout = wibox.container.background, album },
+          }
         }
       }
     },
-    {
-      layout = wibox.container.margin,
-      margins = config.global.m,
-      {
-        layout = wibox.layout.flex.horizontal,
-        {
-          layout = wibox.container.place,
-          halign = 'right',
-          valign = 'center',
-          prev
-        },
-        {
-          layout = wibox.container.place,
-          halign = 'center',
-          valign = 'center',
-          play
-        },
-        {
-          layout = wibox.container.place,
-          halign = 'left',
-          valign = 'center',
-          next
-        },
-      }
-    }
+    controls
   }
   
   return wibox.widget {

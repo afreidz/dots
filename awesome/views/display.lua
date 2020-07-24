@@ -79,6 +79,24 @@ return function()
     end)
   ));
 
+  local brightness = wibox.widget.slider();
+  brightness.bar_shape = function(c,w,h) gears.shape.rounded_rect(c,w,h,config.global.slider/2) end;
+  brightness.bar_height = config.global.slider;
+  brightness.bar_color = config.colors.b..'26';
+  brightness.bar_active_color = config.colors.w;
+  brightness.handle_shape = gears.shape.circle;
+  brightness.handle_width = config.global.slider;
+  brightness.handle_color = config.colors.w;
+  brightness.handle_border_width = 1;
+  brightness.handle_border_color = config.colors.x7;
+  brightness.minimum = 30;
+  brightness.maximum = 100;
+  brightness:connect_signal('property::value', function()
+    for k in pairs(mouse.screen.outputs) do
+      awful.spawn.with_shell(config.commands.setbrightness..' '..k..' '..tostring(brightness.value/100));
+    end
+  end);
+
   changewall:setup {
     layout = wibox.container.background,
     bg = config.colors.x12,
@@ -118,7 +136,32 @@ return function()
       },
       {
         layout = wibox.layout.fixed.vertical,
-        monitors, changewall,
+        {
+          layout = wibox.container.background,
+          bg = config.colors.f,
+          shape = rounded(),
+          forced_height = (config.global.m*6) + config.global.slider,
+          {
+            layout = wibox.layout.fixed.vertical,
+            {
+              layout = wibox.container.margin,
+              margins = config.global.m,
+              {
+                font = config.fonts.tlb,
+                text = "Brightness",
+                widget = wibox.widget.textbox,
+              }
+            },
+            {
+              layout = wibox.container.margin,
+              left = config.global.m,
+              right = config.global.m,
+              bottom = config.global.m,
+              brightness,
+            }
+          }
+        },
+        { layout = wibox.container.margin, top = config.global.m, monitors }, changewall,
       },
       nil
     }
@@ -127,6 +170,13 @@ return function()
   view.refresh = function()
     screens = {};
     layout:reset();
+
+    for k in pairs(mouse.screen.outputs) do
+      awful.spawn.easy_async_with_shell(config.commands.getbrightness..' '..k, function(o)
+        brightness:set_value(math.floor(tonumber(o)*100));
+      end)
+    end
+
     awful.spawn.with_line_callback(config.commands.getwall, {
       stdout = function(o) table.insert(screens,o) end,
       output_done = function()

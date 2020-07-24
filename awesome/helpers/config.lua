@@ -110,6 +110,8 @@ return {
     spot = '󰓇',
   },
   commands = {
+    getbrightness = gears.filesystem.get_configuration_dir()..'helpers/getbrightness.sh',
+    setbrightness = gears.filesystem.get_configuration_dir()..'helpers/setbrightness.sh',
     art = gears.filesystem.get_configuration_dir()..'helpers/albumart.sh',
     getwall = gears.filesystem.get_configuration_dir()..'helpers/wall.sh',
     resize = gears.filesystem.get_configuration_dir()..'helpers/resize.sh',
@@ -138,13 +140,14 @@ return {
     spotify = "spotify",
     rofi = "rofi -show drun -theme config-global",
     software = "pamac-manager",
-    pause = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause",
-    play = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play",
-    next = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next",
-    prev = "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous",
-    artist = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --artist | jq .artist",
-    song = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --song | jq .song",
-    album = "python "..gears.filesystem.get_configuration_dir().."helpers/spotify.py --album | jq .album",
+    pause = "spotifycli --pause",
+    play = "spotifycli --play",
+    next = "spotifycli --next",
+    prev = "spotifycli --prev",
+    artist = "spotifycli --artist",
+    song = "spotifycli --song",
+    album = "spotifycli --album",
+    isplaying = 'bash -c "spotifycli --playbackstatus | diff <(echo \"▶\") -"',
   },
   notifications = {
     active = {},
@@ -152,8 +155,5 @@ return {
   },
   display = {
     sw = 120,
-  },
-  media = {
-    cover = gears.filesystem.get_configuration_dir()..'tmp/media/cover.jpg',
   }
 };

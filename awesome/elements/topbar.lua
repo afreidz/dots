@@ -245,7 +245,7 @@ function make_taglist(s)
     width = w,
     height = h,
     screen = s,
-    visible = false,
+    visible = true,
     bg = f,
     fg = b,
   });
