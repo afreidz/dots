@@ -33,5 +33,6 @@ rounded-corners-exclude = [
 wintypes: {
     menu = { shadow: false },
     dock = { shadow: false },
-    utility = { shadow: false }
+    utility = { shadow: false },
+    toolbar = { shadow: false },
 };

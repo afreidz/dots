@@ -17,7 +17,6 @@ My "dotfiles" for awesomewm on Linux
 - awk
 - print
 - imagemagik (convert, composite)
-- i3lock
 - systemctl
 - awesomewm
 - rofi
@@ -29,6 +28,12 @@ My "dotfiles" for awesomewm on Linux
 - iwgetid
 - ip link
 - yay
+- bt-device
+- top
+- df
+- curl
+- dbus-send
+- ps
 
 
 ## BINARIES USED IN THIS CONFIG
@@ -43,5 +48,5 @@ My "dotfiles" for awesomewm on Linux
 
 
 ## FONTS USED IN THIS CONFIG
-- Material Design Icons Desktop (AUR)
-- Poppins Font
+- Material Design Icons Desktop (https://github.com/Templarian/MaterialDesign-Font)
+- SF Pro Font (AUR: ttf-yosemite-san-francisco-font-git)

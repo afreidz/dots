@@ -89,11 +89,12 @@ return function()
   brightness.handle_color = config.colors.w;
   brightness.handle_border_width = 1;
   brightness.handle_border_color = config.colors.x7;
-  brightness.minimum = 30;
+  brightness.minimum = 0;
   brightness.maximum = 100;
   brightness:connect_signal('property::value', function()
     for k in pairs(mouse.screen.outputs) do
-      awful.spawn.with_shell(config.commands.setbrightness..' '..k..' '..tostring(brightness.value/100));
+      local n = (7 * brightness.value + 300)/1000;
+      awful.spawn.with_shell(config.commands.setbrightness..' '..k..' '..tostring(n));
     end
   end);
 
@@ -173,7 +174,8 @@ return function()
 
     for k in pairs(mouse.screen.outputs) do
       awful.spawn.easy_async_with_shell(config.commands.getbrightness..' '..k, function(o)
-        brightness:set_value(math.floor(tonumber(o)*100));
+        local n = ((1000/7)*tonumber(o))+(-300/7);
+        brightness:set_value(math.floor(tonumber(n)));
       end)
     end
 

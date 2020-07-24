@@ -193,7 +193,7 @@ return function()
   
   hub.x = 100;
   hub.y = 50;
-  hub.shape = rounded()
+  --hub.shape = rounded()
   hub:buttons(gears.table.join(
     awful.button({ }, 3, function() hub.visible = false end)
   ));
