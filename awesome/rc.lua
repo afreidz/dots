@@ -172,7 +172,7 @@ awful.spawn.with_line_callback(config.commands.idle, {
 		if o == 'lock' and root.elements.lockscreen then  
 			root.elements.lockscreen.lock();
 		elseif o == 'suspend' then
-			awful.spawn('systemctl suspend')
+			awful.spawn(config.commands.suspend);
 		end
 	end
 });

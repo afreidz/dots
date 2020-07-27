@@ -126,12 +126,12 @@ function make_nav()
   rule.bg = config.colors.f;
   rule.widget = wibox.widget.base.empty_widget();
 
-  table.insert(root.elements.hub_views, make_view(config.icons.note, "notifications", require('views.notifications')()));
-  table.insert(root.elements.hub_views, make_view(config.icons.date, "calendar", require('views.calendar')()));
-  table.insert(root.elements.hub_views, make_view(config.icons.web, "connections", require('views.connections')()));
-  table.insert(root.elements.hub_views, make_view(config.icons.system, "system", require('views.system')()));
-  table.insert(root.elements.hub_views, make_view(config.icons.display, "display", require('views.display')()));
-  table.insert(root.elements.hub_views, make_view(config.icons.media, "media", require('views.media')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.note, "notifications", require('elements.hub.notifications')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.date, "calendar", require('elements.hub.calendar')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.web, "connections", require('elements.hub.connections')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.system, "system", require('elements.hub.system')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.display, "display", require('elements.hub.display')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.media, "media", require('elements.hub.media')()));
 
   local header = wibox.container.margin();
   header.margins = config.global.m;
