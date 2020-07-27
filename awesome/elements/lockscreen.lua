@@ -9,6 +9,8 @@ local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
 
+root.elements = root.elements or {};
+
 local locker = {
   prompt = nil,
   panel = nil,
@@ -26,6 +28,8 @@ function unlock(pwd)
       locker.callback();
       locker.callback = nil;
     else
+      for s in screen do s.tags[1].selected = true end;
+      if root.elements.topbar then root.elements.topbar.show() end;
       if mouse.current_client then mouse.current_client:raise() end;
     end
   else
@@ -43,6 +47,9 @@ function lock(cb)
     });
   end
 
+  for s in screen do s.selected_tag.selected = false end;
+  if root.elements.topbar then root.elements.topbar.hide() end;
+  if root.elements.hub then root.elements.hub.visible = false end;
   if locker.splash.widget then locker.splash.widget.visible = true end;
   if cb then locker.callback = cb end;
 end
@@ -94,8 +101,7 @@ function make_splash()
   
   local box = wibox({
     type = 'splash',
-    bg = config.colors.f,
-    --bgimage = config.global.lock,
+    bg = config.colors.t,
     width = w, height = h,
     x = 0, y = 0,
     ontop = true,
@@ -189,9 +195,10 @@ function make_prompt()
 end
 
 return function()
+  locker.lock = lock;
   locker.panel = make_panel();
   locker.splash = make_splash();
   locker.splash.layout:add_at(locker.panel.widget, { x = 10, y = 10});
 
-  return { lock = lock }
+  root.elements.lockscreen = locker;
 end

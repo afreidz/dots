@@ -60,7 +60,7 @@ return function()
   close.font = config.fonts.il;
   close.forced_height = config.hub.i;
   close:buttons(gears.table.join(
-    awful.button({}, 1, function() if root.hub then root.hub.close() end end)
+    awful.button({}, 1, function() if root.elements.hub then root.elements.hub.close() end end)
   ));
 
   local connections = wibox.layout.fixed.vertical();

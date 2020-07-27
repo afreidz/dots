@@ -59,7 +59,7 @@ return function()
   close.font = config.fonts.il;
   close.forced_height = config.hub.i;
   close:buttons(gears.table.join(
-    awful.button({}, 1, function() if root.hub then root.hub.close() end end)
+    awful.button({}, 1, function() if root.elements.hub then root.elements.hub.close() end end)
   ));
 
   local monitors = wibox.container.background();
@@ -74,7 +74,7 @@ return function()
   changewall.bottom = config.global.m;
   changewall:buttons(gears.table.join(
     awful.button({}, 1, function()
-      if root.hub then root.hub.close() end
+      if root.elements.hub then root.elements.hub.close() end
       awful.spawn(config.commands.setwall);
     end)
   ));
@@ -174,7 +174,7 @@ return function()
 
     for k in pairs(mouse.screen.outputs) do
       awful.spawn.easy_async_with_shell(config.commands.getbrightness..' '..k, function(o)
-        local n = ((1000/7)*tonumber(o))+(-300/7);
+        local n = (1000*tonumber(o)-300)/7;
         brightness:set_value(math.floor(tonumber(n)));
       end)
     end

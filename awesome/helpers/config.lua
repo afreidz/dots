@@ -65,6 +65,17 @@ return {
   topbar = {
     h = 30,
     w = 30,
+    dw = 200,
+    utilities = {
+      wifi = true,
+      bt = true,
+      lan = false,
+      vol = true,
+      bat = false,
+      pac = true,
+      mem = true,
+      note = true,
+    },
   },
   tagswitcher= {
     h = 120,
@@ -123,8 +134,8 @@ return {
     btup = gears.filesystem.get_configuration_dir()..'helpers/btup.sh',
     btdevices = gears.filesystem.get_configuration_dir()..'helpers/btdevices.sh',
     btdevice = gears.filesystem.get_configuration_dir()..'helpers/btdevice.sh',
-    idle = 'bash -c "xidlehook --not-when-audio --timer 500 \'echo lock\' \'\'"',
-    proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%mem,-%cpu | head -n 6"',
+    idle = 'bash -c "xidlehook --not-when-audio --timer 500 \'echo lock\' \'\' --timer 120 \'echo suspend\' \'\'"',
+    proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%cpu,-%mem | head -n 6"',
     synccmd = 'bash -c "yay -Syy"',
     updatescmd = 'bash -c "yay -Sup | wc -l"',
     ismuted = 'bash -c "pamixer --get-mute | diff <(echo \"true\") -"',
@@ -155,5 +166,5 @@ return {
   },
   display = {
     sw = 120,
-  }
+  },
 };

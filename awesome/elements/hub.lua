@@ -6,21 +6,30 @@ local config = require('helpers.config');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
-local views = {};
+
+root.elements = root.elements or {};
+root.elements.hub_views = root.elements.hub_views or {};
 
 function close_views()
   gears.table.map(function(v)
     v.view.visible = false;
     v.title.font = config.fonts.tll;
-  end, views);
+  end, root.elements.hub_views);
 end
 
-function enable_view_by_index(i)
-  if views[i] then 
+function enable_view_by_index(i, s, loc)
+  if root.elements.hub_views[i] then 
     close_views();
-    views[i].view.visible = true;
-    views[i].title.font = config.fonts.tlb;
-    if views[i].view.refresh then views[i].view.refresh() end
+    root.elements.hub_views[i].view.visible = true;
+    root.elements.hub_views[i].title.font = config.fonts.tlb;
+    if root.elements.hub_views[i].view.refresh then root.elements.hub_views[i].view.refresh() end
+    if not s then return end
+    if loc == 'right' then
+      root.elements.hub.x = (s.workarea.width - config.hub.w - config.global.m) + s.workarea.x;
+    else
+      root.elements.hub.x = ((s.workarea.width / 2) - (config.hub.w/2)) + s.workarea.x;
+    end
+    root.elements.hub.visible = true;
   end
 end 
 
@@ -117,12 +126,12 @@ function make_nav()
   rule.bg = config.colors.f;
   rule.widget = wibox.widget.base.empty_widget();
 
-  table.insert(views, make_view(config.icons.note, "notifications", require('views.notifications')()));
-  table.insert(views, make_view(config.icons.date, "calendar", require('views.calendar')()));
-  table.insert(views, make_view(config.icons.web, "connections", require('views.connections')()));
-  table.insert(views, make_view(config.icons.system, "system", require('views.system')()));
-  table.insert(views, make_view(config.icons.display, "display", require('views.display')()));
-  table.insert(views, make_view(config.icons.media, "media", require('views.media')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.note, "notifications", require('views.notifications')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.date, "calendar", require('views.calendar')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.web, "connections", require('views.connections')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.system, "system", require('views.system')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.display, "display", require('views.display')()));
+  table.insert(root.elements.hub_views, make_view(config.icons.media, "media", require('views.media')()));
 
   local header = wibox.container.margin();
   header.margins = config.global.m;
@@ -142,7 +151,7 @@ function make_nav()
   nav_container.forced_height = config.hub.h;
   nav_container:add(header);
   nav_container:add(rule);
-  gears.table.map(function(v) nav_container:add(v.link) end, views);
+  gears.table.map(function(v) nav_container:add(v.link) end, root.elements.hub_views);
 
   local power = wibox.container.background();
   power.bg = config.colors.x1;
@@ -178,26 +187,24 @@ end
 
 return function()
   local hub = wibox({
+    ontop = true,
+    visible = false,
     type = 'toolbar',
+    bg = config.colors.f,
     width = config.hub.w,
     height = config.hub.h,
-    visible = false,
-    ontop = true,
-    bg = config.colors.f,
     screen = awful.screen.primary,
   });
 
   local nav = make_nav();
   local view_container = wibox.layout.stack();
-  gears.table.map(function(v) view_container:add(v.view) end, views);
+  gears.table.map(function(v) view_container:add(v.view) end, root.elements.hub_views);
   
-  hub.x = 100;
-  hub.y = 50;
-  --hub.shape = rounded()
   hub:buttons(gears.table.join(
     awful.button({ }, 3, function() hub.visible = false end)
   ));
   
+  hub.y = config.topbar.h + (config.global.m*2);
   hub:setup {
     layout = wibox.layout.flex.vertical,
     {
@@ -211,11 +218,8 @@ return function()
   hub.enable_view_by_index = enable_view_by_index;
   hub.close_views = close_views;
   hub.make_view = make_view;
-  hub.views = views;
-
+  
   close_views();
-  root.hub = hub;
-
-  return hub;
+  root.elements.hub = hub;
 end
 

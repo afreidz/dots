@@ -8,11 +8,8 @@ local config = require('helpers.config');
 local beautiful = require('beautiful');
 require('./errors')();
 
--- PLACEHOLDERS
-local hub = nil;
-local topbar = nil;
-local tagswitcher = nil;
-local lockscreen = nil;
+-- ELEMENT STORE
+root.elements = root.elements or {};
 
 -- THEME
 beautiful.useless_gap = 5;
@@ -49,9 +46,9 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey }, "space", function() awful.spawn(config.commands.rofi) end),
 	
 	awful.key({ modkey, "Shift" }, "r", awesome.restart),
-	-- awful.key({ modkey, "Shift" }, "r", function() if lockscreen then lockscreen.lock(awesome.restart) end end),
 	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
-	awful.key({ modkey, "Shift" }, "l", function() if lockscreen then lockscreen.lock() end end),
+	awful.key({ modkey, "Shift" }, "l", function() if root.elements.lockscreen then root.elements.lockscreen.lock() end end),
+	-- awful.key({ modkey, "Shift" }, "r", function() if root.elements.lockscreen then root.elements.lockscreen.lock(awesome.restart) end end),
 	
 	awful.key({ modkey }, "Left", function() awful.client.focus.byidx(-1) end),
 	awful.key({ modkey }, "Right", function() awful.client.focus.byidx(1) end),
@@ -78,19 +75,17 @@ for i = 0, 9 do
 		end),
 		awful.key({ modkey, 'Control'}, spot, function()
 			local tag = root.tags()[i];
-			if tag then client.focus:move_to_tag(tag) end;
+			if tag and client.focus then client.focus:move_to_tag(tag) end;
 		end)
 	});
 end
 
 awful.mouse.append_global_mousebindings({
-	awful.button({}, 1, function() if hub then hub.close() end end),
+	awful.button({}, 1, function()
+		if root.elements.hub then root.elements.hub.close() end 
+	end),
 	awful.button({}, 3, function()
-		local s = awful.screen.focused();
-		local h = root.hub
-		h.visible = true;
-		h.enable_view_by_index(5);
-		h.x = ((s.workarea.width / 2) - (config.hub.w/2)) + s.workarea.x;		
+		root.elements.hub.enable_view_by_index(5, mouse.screen);
 	end)
 });
 
@@ -99,17 +94,27 @@ client.connect_signal("request::default_keybindings", function(c)
 	awful.keyboard.append_client_keybindings({
 		awful.key({ modkey }, "q", function (c) c.kill(c) end),
 		awful.key({ modkey, "Control" }, "Right", function(c) c:move_to_screen(c.screen.index+1) end),
-		awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end)
+		awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end),
+		awful.key({ modkey, "Control" }, "f", function(c) c.fullscreen = not c.fullscreen end),
+		awful.key({ modkey, "Shift" }, "f", function(c) c.floating = not c.floating end)
 	});
 end);
 
 client.connect_signal("request::default_mousebindings", function(c)
 	awful.mouse.append_client_mousebindings({
 		awful.button({}, 1, function (c)
-			if hub then hub.close() end
-			c:activate { context = "mouse_click";
-		} end),
-		awful.button({ modkey }, 1, function (c) c:activate { context = "mouse_click", action = "mouse_move" } end)
+			if root.elements.hub then root.elements.hub.close() end
+			c:activate { context = "mouse_click", raise = true } 
+		end),
+		awful.button({ modkey }, 1, function (c) 
+			c.floating = true;
+			c.width = 800;
+			c.height = 600;
+			c:activate { context = "mouse_click", action = "mouse_move" } 
+		end),
+		awful.button({ modkey }, 3, function (c) 
+			c:activate { context = "mouse_click", action = "mouse_resize" } 
+		end)
 	});
 end);
 
@@ -119,10 +124,30 @@ ruled.client.connect_signal("request::rules", function()
 		id = 'global',
 		rule = { },
 		properties = {
-			focus = awful.client.focus.filter,
 			raise = true,
+			switch_to_tags = true,
 			size_hints_honor = false,
-			placement = awful.placement.no_offscreen
+			screen = awful.screen.preferred,
+			focus = awful.client.focus.filter,
+			placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+		}
+	}
+	ruled.client.append_rule {
+		id = 'code',
+		rule = { class = 'Code' },
+		properties = { 
+			floating = false,
+			tag = screen[2].tags[1],
+		}
+	}
+	ruled.client.append_rule {
+		id = 'files',
+		rule = { role = 'GtkFileChooserDialog' },
+		properties = { 
+			floating = true,
+			placement = awful.placement.centered,
+			width = 800,
+			height = 600 
 		}
 	}
 end);
@@ -134,17 +159,23 @@ end);
 -- SPAWNS
 awful.spawn.with_shell("$HOME/.config/awesome/startup/wall.sh");
 awful.spawn.with_shell("$HOME/.config/awesome/startup/compositor.sh");
--- awful.spawn.with_shell("$HOME/.config/awesome/startup/lockscreenbg.sh");
 
--- WIDGETS
-hub = require('elements.hub')();
-topbar = require('elements.topbar')();
-tagswitcher = require('elements.tagswitch')();
-lockscreen = require('elements.lockscreen')();
+-- ELEMENTS
+if not root.elements.hub then require('elements.hub')() end;
+if not root.elements.topbar then require('elements.topbar')() end;
+if not root.elements.tagswitcher then require('elements.tagswitch')() end;
+if not root.elements.lockscreen then require('elements.lockscreen')() end;
 
+-- IDLE
 awful.spawn.with_line_callback(config.commands.idle, {
-  stdout = function() lockscreen.lock() end
+	stdout = function(o)
+		if o == 'lock' and root.elements.lockscreen then  
+			root.elements.lockscreen.lock();
+		elseif o == 'suspend' then
+			awful.spawn('systemctl suspend')
+		end
+	end
 });
 
 os.execute('sleep 0.1');
-topbar.show();
+if root.elements.topbar then root.elements.topbar.show() end;
