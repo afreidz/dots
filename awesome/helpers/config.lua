@@ -56,8 +56,8 @@ return {
     t = "SF Pro Rounded",
     i = "MaterialDesignIconsDesktop",
   },
-  lock = {
-    w = 400,
+  powermenu = {
+    w = 500,
     h = 330,
     hh = 230,
     a = 100,
@@ -119,6 +119,9 @@ return {
     next = '󰒭',
     prev = '󰒮',
     spot = '󰓇',
+    restart = '󰜉',
+    logout = '󰗽',
+    suspend = '󰤄',
   },
   commands = {
     getbrightness = gears.filesystem.get_configuration_dir()..'scripts/getbrightness.sh',
@@ -160,6 +163,8 @@ return {
     album = "spotifycli --album",
     isplaying = 'bash -c "spotifycli --playbackstatus | diff <(echo \"▶\") -"',
     suspend = "systemctl suspend",
+    restart = "systemctl restart",
+    shutdown = "systemctl poweroff",
   },
   notifications = {
     active = {},

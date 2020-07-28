@@ -76,6 +76,11 @@ function make_power(s)
   power:struts({ top = config.topbar.h + config.global.m });
   power.x = (s.workarea.width - (config.topbar.w + config.global.m)) + s.workarea.x;
   power.y = config.global.m;
+  power:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      if root.elements.powermenu.show then root.elements.powermenu.show() end
+    end)
+  ));
 
   root.elements.power = root.elements.power or {};
   root.elements.power[s.index] = power;
@@ -120,7 +125,7 @@ function make_icon(i)
   icon.font = config.fonts.is;
 
   local container = wibox.widget {
-    layout = wibox.widget.background,
+    layout = wibox.container.background,
     fg = config.colors.w,
     icon
   };
@@ -218,124 +223,6 @@ function make_utilities(s)
   root.elements.utilities[s.index] = utilities;
 end
 
-
--- function make_utility(s)
---   local uw = 240;
-
---   local utility = wibox({
---     type = "utility",
---     width = uw,
---     height = h,
---     screen = s,
---     visible = false,
---     bg = t,
---   });
-
---   function make_icon(i)
---     local icon = wibox.widget.textbox(i);
---     icon.forced_width = w;
---     icon.forced_height = h;
---     icon.align = "center";
---     icon.valign = "center";
---     icon.font = "MaterialDesignIconsDesktop 12";
-
---     local container = wibox.container.background();
---     container:setup {
---       widget = icon,
---     }
---     return { icon = icon, container = container, widget = container };
---   end
-
---   local wifi = make_icon(config.icons.wifi);
---   local vol = make_icon(config.icons.bt);
---   local vol = make_icon(config.icons.vol_1);
---   local pac = make_icon(config.icons.pac);
---   local mem = make_icon(config.icons.mem);
---   local lan = make_icon(config.icons.lan);
---   local note = make_icon(config.icons.note);
-
---   wifi.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(3) end)));
---   bt.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(3) end)));
---   vol.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(6) end)));
---   pac.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(4) end)));
---   mem.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(4) end)));
---   lan.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(3) end)));
---   note.widget:buttons(gears.table.join(awful.button({}, 1, function() root.elements.hub.enable_view_by_index(1) end)));
-
---   awful.widget.watch(config.commands.wifiup, 2, function(w,o,e,r,c)
---     if c == 0 then wifi.icon.text = config.icons.wifi else wifi.icon.text = config.icons.wifix end;
---   end);
-
---   awful.widget.watch(config.commands.btup, 2, function(w,o,e,r,c)
---     if c == 0 then bt.icon.text = config.icons.bt else bt.icon.text = config.icons.btx end;
---   end);
-
---   awful.widget.watch(config.commands.lanup, 2, function(w,o,e,r,c)
---     if c == 0 then lan.icon.text = config.icons.lan else lan.icon.text = config.icons.lanx end;
---   end);
-
---   awful.widget.watch(config.commands.ismuted, 1, function(w,o,e,r,c)
---     if c == 0 then vol.icon.text = config.icons.vol_mute else
---       awful.spawn.easy_async_with_shell(config.commands.vol, function(o,e)
---         if e ~= '' then return end
---         local v = tonumber(o);
---         if v >= 75 then vol.icon.text = config.icons.vol_3 elseif v >= 50 then vol.icon.text = config.icons.vol_2 else vol.icon.text = config.icons.vol_1 end;
---       end);
---     end
---   end);
-
---   awful.widget.watch(config.commands.ramcmd, 5, function(w,o,e,r,c)
---     local n = tonumber(o);
---     if n >= 75 then mem.container.fg = config.colors.x9 elseif n >= 50 then mem.container.fg = config.colors.x11 else mem.container.fg = config.colors.x10 end;
---   end);
-
---   awful.widget.watch(config.commands.synccmd, 60);
---   awful.widget.watch(config.commands.updatescmd, 10, function(w,o)
---     local n = tonumber(o);
---     if n > 0 then pac.container.fg = config.colors.x10 else pac.container.fg = config.colors.w end;
---   end);
-
---   awful.widget.watch('echo 1', 1, function(w,o)
---     if #config.notifications.active > 0 then note.container.fg = config.colors.x10 else note.container.fg = config.colors.w end;
---   end);
-
---   local sep = wibox.widget.textbox("|");
---   sep.forced_height = h;
---   sep.forced_width = 20;
---   sep.align = "center";
---   sep.valign = "center";
---   sep.font = "Monospace 14";
---   sep.opacity = 0.2;
-
---   local container = wibox.container.background();
---   container.bg = f;
---   container.shape = rounded();
---   container:setup {
---     layout = wibox.container.margin,
---     left = m,
---     right = m,
---     {
---       widget = wibox.layout.fixed.horizontal,
---       wifi.widget,bt.widget,lan.widget,vol.widget,sep,pac.widget,mem.widget,note.widget,
---     }
---   };
-
---   utility:struts({ top = h + m });
---   utility.y = m;
---   utility.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;
---   utility:buttons(gears.table.join(awful.button({ }, 1, function()
---     root.elements.hub.x = ((s.workarea.width / 2) - (config.hub.w/2)) + s.workarea.x;
---     root.elements.hub.visible = true;
---   end)));
-
---   utility:setup {
---     layout = wibox.container.margin,
---     forced_height = h,
---     container,
---   };
-
---   return utility;
--- end
 
 function make_taglist(s)
   local taglist = wibox({

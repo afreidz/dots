@@ -223,8 +223,12 @@ return function()
   }
 
   awful.widget.watch(config.commands.ramcmd, 5, function(w,o)
-    ram_progress:set_value(tonumber(o));
+    local n = tonumber(o);
+    ram_progress:set_value(n);
     ram_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
+    for _,i in pairs(root.elements.mem_icons) do 
+      if n >= 75 then i.fg = config.colors.x9 elseif n >= 50 then i.fg = config.colors.x11 else i.fg = config.colors.x10 end;
+    end;
   end);
 
   awful.widget.watch(config.commands.cpucmd, 5, function(w,o,e,r,c)
@@ -243,11 +247,19 @@ return function()
   end);
 
   view.refresh = function()
-    awful.widget.watch(config.commands.updatescmd, 5, function(w,o)
+    awful.spawn.easy_async_with_shell(config.commands.updatescmd, function(o,e)
       local n = tonumber(o);
-      if n <= 0 then pac_value.text = 'none available' else pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' end
+      if n <= 0 then 
+        pac_value.text = 'none available';
+        for _,i in pairs(root.elements.pac_icons) do i.fg = config.colors.w end; 
+      else 
+        pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' 
+        for _,i in pairs(root.elements.pac_icons) do i.fg = config.colors.x10 end;
+      end
     end);
   end
+
+  view.refresh();
 
   return view;
 end

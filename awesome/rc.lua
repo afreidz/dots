@@ -47,8 +47,8 @@ awful.keyboard.append_global_keybindings({
 	
 	awful.key({ modkey, "Shift" }, "r", awesome.restart),
 	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
-	awful.key({ modkey, "Shift" }, "l", function() if root.elements.lockscreen then root.elements.lockscreen.lock() end end),
-	-- awful.key({ modkey, "Shift" }, "r", function() if root.elements.lockscreen then root.elements.lockscreen.lock(awesome.restart) end end),
+	awful.key({ modkey, "Shift" }, "l", function() if root.elements.powermenu then root.elements.powermenu.lock() end end),
+	-- awful.key({ modkey, "Shift" }, "r", function() if root.elements.powermenu then root.elements.powermenu.lock(awesome.restart) end end),
 	
 	awful.key({ modkey }, "Left", function() awful.client.focus.byidx(-1) end),
 	awful.key({ modkey }, "Right", function() awful.client.focus.byidx(1) end),
@@ -66,7 +66,7 @@ awful.keyboard.append_global_keybindings({
 -- TAG KEYBINDS
 for i = 0, 9 do
 	local spot = i;
-	if(spot == 0) then spot = 10 end
+	if(spot == 10) then spot = 0 end
 	
 	awful.keyboard.append_global_keybindings({
 		awful.key({ modkey }, spot, function()
@@ -151,26 +151,33 @@ ruled.client.connect_signal("request::rules", function()
 		}
 	}
 end);
+ruled.notification.connect_signal('request::rules', function()
+	ruled.notification.append_rule {
+		rule = { app_name = 'Brave' },
+		properties = { urgency = 'low' }
+	}
+end);
 
 client.connect_signal("manage", function(c) 
 	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end
 end);
 
 -- SPAWNS
-awful.spawn.with_shell("$HOME/.config/awesome/startup/wall.sh");
-awful.spawn.with_shell("$HOME/.config/awesome/startup/compositor.sh");
+awful.spawn.with_shell("$HOME/.config/awesome/scripts/screen.sh");
+awful.spawn.with_shell("$HOME/.config/awesome/scripts/wallpaper.sh");
+awful.spawn.with_shell("$HOME/.config/awesome/scripts/compositor.sh");
 
 -- ELEMENTS
 if not root.elements.hub then require('elements.hub')() end;
 if not root.elements.topbar then require('elements.topbar')() end;
 if not root.elements.tagswitcher then require('elements.tagswitch')() end;
-if not root.elements.lockscreen then require('elements.lockscreen')() end;
+if not root.elements.powermenu then require('elements.powermenu')() end;
 
 -- IDLE
 awful.spawn.with_line_callback(config.commands.idle, {
 	stdout = function(o)
-		if o == 'lock' and root.elements.lockscreen then  
-			root.elements.lockscreen.lock();
+		if o == 'lock' and root.elements.powermenu then  
+			root.elements.powermenu.lock();
 		elseif o == 'suspend' then
 			awful.spawn(config.commands.suspend);
 		end

@@ -167,6 +167,11 @@ function make_nav()
       font = config.fonts.il,
     }
   };
+  power:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      if root.elements.powermenu.show then root.elements.powermenu.show() end
+    end)
+  ));
 
   nav:setup {
     layout = wibox.container.place,

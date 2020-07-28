@@ -30,7 +30,7 @@ function make_note(n)
   local msg = naughty.widget.message {
     notification = n,
     widget_template = {
-      id = 'text_rold',
+      id = 'text_role',
       font = config.fonts.tml,
       widget = naughty.widget.textbox
     }
@@ -113,22 +113,15 @@ return function()
   container.forced_width = config.hub.w - config.hub.nw - (config.global.m*4);
   container.forced_height = config.hub.h - (config.global.m*3) - config.hub.i;
 
-  naughty.connect_signal('added', function(n)
-    if n.urgency == 'low' then
-      container:reset();
-      table.insert(config.notifications.active, n);
-      for k,note in pairs(config.notifications.active) do
-        container:add(make_note(note));
-      end
-    end
-  end);
-
   naughty.connect_signal('destroyed', function(n)
     local i = gears.table.hasitem(config.notifications.active, n);
     if i then 
       table.remove(config.notifications.active, i);
       container:reset();
-      if #config.notifications.active <= 0 then return container:add(show_empty()) end;
+      if #config.notifications.active <= 0 then
+        for _,i in pairs(root.elements.note_icons) do i.fg = config.colors.w end;
+        return container:add(show_empty()) 
+      end;
       for k,note in pairs(config.notifications.active) do
         container:add(make_note(note));
       end
@@ -136,7 +129,16 @@ return function()
   end);
 
   naughty.connect_signal('request::display', function(n)
-    if n.urgency == 'low' then n.ignore = true; n.timeout = 0 end
+    if n.urgency == 'low' then 
+      n.ignore = true; 
+      n.timeout = 0;
+      container:reset();
+      table.insert(config.notifications.active, n);
+      for k,note in pairs(config.notifications.active) do
+        container:add(make_note(note));
+      end
+      for _,i in pairs(root.elements.note_icons) do i.fg = config.colors.x10 end;
+    end
     if n.urgency ~= 'low' then naughty.layout.box { notification = n } end
   end);
 
