@@ -1,0 +1,11 @@
+configuration {
+  location: 1;
+  yoffset: 50;
+  xoffset: 10;
+}
+
+@import "theme.rasi"
+
+window {
+  width: 400px;
+}

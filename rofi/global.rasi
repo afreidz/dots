@@ -1,0 +1,10 @@
+configuration {
+  location: 0;
+  width: 300px;
+}
+
+@import "theme.rasi"
+
+window {
+  width: 400px;
+}

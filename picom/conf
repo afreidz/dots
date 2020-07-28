@@ -8,6 +8,7 @@ shadow-radius = 7;
 shadow-offset-x = -7;
 shadow-offset-y = -5;
 shadow-opacity = 0.3;
+shadow-exclude = [ "class_g = 'Rofi'" ];
 
 fading = true;
 fade-delta = 3;

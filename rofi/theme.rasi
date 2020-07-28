@@ -1,0 +1,69 @@
+configuration {
+  bw: 0;
+  columns: 1;
+  show-icons: true;
+  display-drun: "";
+  display-combi: "";
+  show-match: false;
+  hide-scrollbar: true;
+  disable-history: true;
+  modi: "drun,window,combi";
+  font: "SF Pro Rounded 12";
+  drun-display-format: "{name}";
+}
+
+* {
+  background-color: transparent;
+  text-color: #333538;
+  spacing: 0;
+}
+
+#window {
+  border-radius: 7px;
+  background-color: #C9DDFC80;
+}
+
+#mainbox {
+  padding: 10px;
+}
+
+inputbar {
+  border: 00;
+  children: [prompt,entry];
+  background-color: #C9DDFC80;
+  border-radius: 7;
+}
+
+prompt {
+  padding: 5px;
+  border: 00;
+}
+
+textbox {
+  border: 0;
+  padding: 10px;
+}
+
+entry {
+  padding: 10px;
+  font: "SF Pro Rounded 20";
+}
+
+listview {
+  lines: 6;
+  cycle: true;
+  dynamic: true;
+  margin: 10px 0;
+  scrollbar: false;
+  require-input: true;
+}
+
+element {
+  border: 0;
+  padding: 10px;
+}
+
+element selected {
+  background-color: #C9DDFC80;
+  border-radius: 7;
+}

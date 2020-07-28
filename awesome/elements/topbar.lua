@@ -40,6 +40,11 @@ function make_launcher(s)
   launcher:struts({ top = config.topbar.h + config.global.m });
   launcher.x = s.workarea.x + config.global.m;
   launcher.y = config.global.m;
+  launcher:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      awful.spawn(config.commands.rofi2);
+    end)
+  ));
 
   root.elements.launcher = root.elements.launcher or {};
   root.elements.launcher[s.index] = launcher;

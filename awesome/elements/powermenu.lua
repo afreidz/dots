@@ -12,8 +12,6 @@ local xrdb = beautiful.xresources.get_current_theme();
 root.elements = root.elements or {};
 root.elements.powermenu = root.elements.powermenu or {};
 
-local exit_menu_keybind = awful.key({ 'Mod4' }, "Escape", function() hide() end);
-
 function mask(a,b)
    return a:gsub('.','•'),b;
 end
@@ -80,7 +78,11 @@ function lock(cb)
 
   -- Set lock text
   if root.elements.powermenu.user then 
-    root.elements.powermenu.user.markup = '<span font="'..config.fonts.tll..'">Locked by: </span>'..root.elements.powermenu.user.text 
+    if root.elements.powermenu.user then
+      awful.spawn.easy_async_with_shell('whoami', function(u) 
+        root.elements.powermenu.user.markup = '<span font="'..config.fonts.tll..'">Locked by: </span>'..u:gsub("^%s*(.-)%s*$", "%1") 
+      end);
+    end
   end
 
   -- Setup hover/click state for lock icon
@@ -156,20 +158,15 @@ function hide()
   for s in screen do
     s.tags[1].selected = true;
     root.elements.powermenu.splash[s.index].widget:reset();
+    root.elements.powermenu.splash[s.index].visible = false;
   end;
   
   if root.elements.topbar then root.elements.topbar.show() end;
-  
-  for _,s in pairs(root.elements.powermenu.splash) do s.visible = false end;
-  
+  if mouse.screen then awful.screen.focus(mouse.screen) else awful.focus(screen[1]) end;
+  if mouse.current_client then awful.client.focus = mouse.current_client else awful.client.focus = client.get(screen[1])[1] end;
   if root.elements.powermenu.lockcallback then root.elements.powermenu.lockcallback() end;
   
   root.elements.powermenu.lockcallback = nil;
-  
-  awful.screen.focus(mouse.screen);
-
-  if mouse.current_client then awful.client.focus = mouse.current_client end;
-  
 end
 
 function make_button(i,t)
@@ -313,7 +310,6 @@ end
 
 return function()
   make_powermenu();
-
   root.elements.powermenu.lock = lock;
   root.elements.powermenu.show = show;
 end
