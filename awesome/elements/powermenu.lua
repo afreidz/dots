@@ -153,7 +153,7 @@ function show()
 end
 
 function hide()
-  for s in screen do 
+  for s in screen do
     s.tags[1].selected = true;
     root.elements.powermenu.splash[s.index].widget:reset();
   end;
@@ -166,10 +166,9 @@ function hide()
   
   root.elements.powermenu.lockcallback = nil;
   
-  if screen[1].tags[1]:clients()[1] then
-    client.focus = screen[1].tags[1]:clients()[1];
-    screen[1].tags[1]:clients()[1]:raise();
-  end
+  awful.screen.focus(mouse.screen);
+
+  if mouse.current_client then awful.client.focus = mouse.current_client end;
   
 end
 
