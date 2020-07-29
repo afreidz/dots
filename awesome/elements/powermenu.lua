@@ -129,7 +129,7 @@ function show()
     root.elements.powermenu.buttons:add(root.elements.powermenu.icon_restart);
     root.elements.powermenu.buttons:add(root.elements.powermenu.icon_logout);
     root.elements.powermenu.buttons:add(root.elements.powermenu.icon_lock);
-    root.elements.powermenu.buttons:add(root.elements.powermenu.icon_exit);
+    root.elements.powermenu.buttons:add(root.elements.powermenu.icon_cancel);
   end
 
   -- Set text
@@ -227,14 +227,14 @@ function make_powermenu()
   local restart = make_button(config.icons.restart, 'restart');
   local suspend = make_button(config.icons.suspend, 'suspend');
   local logout = make_button(config.icons.logout, 'logout');
-  local exit = make_button(config.icons.close, 'exit');
+  local cancel = make_button(config.icons.close, 'cancel');
   local lock = make_button(config.icons.lock, 'lock');
 
   shutdown:buttons(gears.table.join(awful.button({}, 1, function() awful.spawn.with_shell(config.commands.shutdown) end)));
   restart:buttons(gears.table.join(awful.button({}, 1, function() awful.spawn.with_shell(config.commands.restart) end)));
   suspend:buttons(gears.table.join(awful.button({}, 1, function() awful.spawn.with_shell(config.commands.suspend) end)));
   logout:buttons(gears.table.join(awful.button({}, 1, function() awesome.quit() end)));
-  exit:buttons(gears.table.join(awful.button({}, 1, function() hide() end)));
+  cancel:buttons(gears.table.join(awful.button({}, 1, function() hide() end)));
 
   local avatar = wibox.widget.imagebox();
   avatar.image = config.global.user;
@@ -300,8 +300,8 @@ function make_powermenu()
   root.elements.powermenu.icon_suspend = suspend;
   root.elements.powermenu.icon_restart = restart;
   root.elements.powermenu.icon_logout = logout;
+  root.elements.powermenu.icon_cancel = cancel;
   root.elements.powermenu.icon_lock = lock;
-  root.elements.powermenu.icon_exit = exit;
   root.elements.powermenu.prompt = prompt;
   root.elements.powermenu.splash = splash;
   root.elements.powermenu.panel = panel;

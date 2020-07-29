@@ -137,7 +137,7 @@ ruled.client.connect_signal("request::rules", function()
 		rule = { class = 'Code' },
 		properties = { 
 			floating = false,
-			tag = screen[2].tags[1],
+			tag = screen[2].tags[1] or screen.primary.tags[1],
 		}
 	}
 	ruled.client.append_rule {

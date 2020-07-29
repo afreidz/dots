@@ -147,7 +147,7 @@ return {
     mute = 'bash -c "pamixer -t"',
     ssid = 'bash -c "iwgetid -r"',
     setwall = 'nitrogen',
-    browser = "brave-beta",
+    browser = "brave",
     editor = "code",
     terminal = "urxvt",
     files = "nautilus",
