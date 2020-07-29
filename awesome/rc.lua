@@ -145,8 +145,16 @@ ruled.client.connect_signal("request::rules", function()
 		properties = { 
 			floating = true,
 			placement = awful.placement.centered,
-			width = 800,
-			height = 600 
+			size_hints_honor = true,
+		}
+	}
+	ruled.client.append_rule {
+		id = 'files',
+		rule = { type = 'dialog' },
+		properties = { 
+			floating = true,
+			placement = awful.placement.centered,
+			size_hints_honor = true,
 		}
 	}
 	ruled.client.append_rule {
@@ -155,8 +163,7 @@ ruled.client.connect_signal("request::rules", function()
 		properties = { 
 			floating = true,
 			placement = awful.placement.centered,
-			width = 600,
-			height = 600 
+			size_hints_honor = true,
 		}
 	}
 end);

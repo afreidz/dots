@@ -167,6 +167,8 @@ return {
     restart = "systemctl restart",
     shutdown = "systemctl poweroff",
     scrot = "scrot '%Y-%m-%d-%h-%m-%s_scrot.png' -e 'mv $f ~/Scrot'",
+    audiosrc = "pamixer --list-sinks | awk -F\\\" '{print $4}'",
+    micsrc = "pamixer --list-sources | grep $(pacmd list-sources | grep '*' | awk '{print $3}' ) | awk -F\\\" '{print $4}'",
   },
   notifications = {
     active = {},

@@ -41,6 +41,7 @@ URxvt.termName: rxvt-unicode-256color
 URxvt.letterSpace: -1
 URxvt.scrollBar: false
 URxvt.internalBorder: 60
+URxvt.depth: 24
 URxvt.clipboard.autocopy: true
 URxvt.keysym.Control-Shift-V: perl:pasta:paste
 URxvt.perl-ext-common: selection-to-clipboard,pasta

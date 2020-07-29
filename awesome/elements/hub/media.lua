@@ -206,8 +206,16 @@ return function()
     awful.button({}, 1, function() if root.elements.hub then root.elements.hub.close() end end)
   ));
 
-  local heading = wibox.widget.textbox('Volume');
-  heading.font = config.fonts.tlb;
+  local vol_heading = wibox.widget.textbox('Volume');
+  vol_heading.font = config.fonts.tlb;
+
+  local vol_footer = wibox.widget.textbox('test');
+  vol_footer.font = config.fonts.tsl;
+  vol_footer.align = 'right';
+
+  local mic_footer = wibox.widget.textbox('test');
+  mic_footer.font = config.fonts.tsl;
+  mic_footer.align = 'right';
 
   local vol_slider = wibox.widget.slider();
   vol_slider.bar_shape = function(c,w,h) gears.shape.rounded_rect(c,w,h,config.global.slider/2) end;
@@ -235,6 +243,14 @@ return function()
     local temp_vol = vol_slider.value;
 
     layout:set(1, make_spotify(view));
+
+    awful.spawn.easy_async_with_shell(config.commands.audiosrc, function(o)
+      vol_footer.markup = 'Output: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>';
+    end);
+
+    awful.spawn.easy_async_with_shell(config.commands.micsrc, function(o,e)
+      mic_footer.markup = 'Input: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>';
+    end);
     
     awful.spawn.easy_async_with_shell(config.commands.vol, function(o) 
       vol_slider:set_value(tonumber(o)); 
@@ -243,11 +259,11 @@ return function()
     awful.spawn.easy_async_with_shell(config.commands.ismuted, function(o,e,r,c) 
       if c == 0 then 
         vol_slider.bar_active_color = config.colors.b..'26';
-        heading.markup = 'Volume <span font="'..config.fonts.tll..'">(muted)</span>';
+        vol_heading.markup = 'Volume <span font="'..config.fonts.tll..'">(muted)</span>';
         mute.text = config.icons.vol_mute 
       else 
         vol_slider.bar_active_color = config.colors.w;
-        heading.text = 'Volume';
+        vol_heading.text = 'Volume';
         mute.text = config.icons.vol_1 
       end;
     end);
@@ -277,7 +293,6 @@ return function()
         layout = wibox.container.background,
         bg = config.colors.f,
         shape = rounded(),
-        forced_height = (config.global.m*6) + config.global.slider,
         {
           layout = wibox.layout.fixed.vertical,
           {
@@ -285,7 +300,7 @@ return function()
             margins = config.global.m,
             {
               layout = wibox.layout.align.horizontal,
-              heading,
+              vol_heading,
               nil,
               mute,
             }
@@ -295,7 +310,21 @@ return function()
             left = config.global.m,
             right = config.global.m,
             bottom = config.global.m,
+            forced_height = config.global.slider + (config.global.m*2),
             vol_slider
+          },
+          {
+            layout = wibox.container.margin,
+            left = config.global.m,
+            right = config.global.m,
+            vol_footer,
+          },
+          {
+            layout = wibox.container.margin,
+            left = config.global.m,
+            right = config.global.m,
+            bottom = config.global.m,
+            mic_footer,
           }
         }
       },
