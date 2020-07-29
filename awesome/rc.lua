@@ -45,10 +45,11 @@ awful.keyboard.append_global_keybindings({
 	awful.key({ modkey }, "f", function() awful.spawn(config.commands.files) end),
 	awful.key({ modkey }, "space", function() awful.spawn(config.commands.rofi) end),
 	
-	awful.key({ modkey, "Shift" }, "r", awesome.restart),
+	-- awful.key({ modkey, "Shift" }, "r", awesome.restart),
 	awful.key({ modkey, "Shift" }, "q", function() awesome.quit() end),
 	awful.key({ modkey, "Shift" }, "l", function() if root.elements.powermenu then root.elements.powermenu.lock() end end),
-	-- awful.key({ modkey, "Shift" }, "r", function() if root.elements.powermenu then root.elements.powermenu.lock(awesome.restart) end end),
+	awful.key({ modkey, "Shift" }, "p", function() awful.spawn(config.commands.scrot) end),
+	awful.key({ modkey, "Shift" }, "r", function() if root.elements.powermenu then root.elements.powermenu.lock(awesome.restart) end end),
 	
 	awful.key({ modkey }, "Left", function() awful.client.focus.byidx(-1) end),
 	awful.key({ modkey }, "Right", function() awful.client.focus.byidx(1) end),
@@ -108,8 +109,6 @@ client.connect_signal("request::default_mousebindings", function(c)
 		end),
 		awful.button({ modkey }, 1, function (c) 
 			c.floating = true;
-			c.width = 800;
-			c.height = 600;
 			c:activate { context = "mouse_click", action = "mouse_move" } 
 		end),
 		awful.button({ modkey }, 3, function (c) 
@@ -147,6 +146,16 @@ ruled.client.connect_signal("request::rules", function()
 			floating = true,
 			placement = awful.placement.centered,
 			width = 800,
+			height = 600 
+		}
+	}
+	ruled.client.append_rule {
+		id = 'files',
+		rule = { class = 'Nitrogen' },
+		properties = { 
+			floating = true,
+			placement = awful.placement.centered,
+			width = 600,
 			height = 600 
 		}
 	}

@@ -11,6 +11,7 @@ local xrdb = beautiful.xresources.get_current_theme();
 
 root.elements = root.elements or {};
 root.elements.powermenu = root.elements.powermenu or {};
+root.elements.powermenu.open = false;
 
 function mask(a,b)
    return a:gsub('.','•'),b;
@@ -54,6 +55,9 @@ function prompt()
 end
 
 function lock(cb)
+  if root.elements.powermenu.open then return end;
+  root.elements.powermenu.open = true;
+
   -- Show splash screen and add panel to mouse screen
   for _,s in pairs(root.elements.powermenu.splash) do s.visible = true end
   if root.elements.powermenu.panel then
@@ -107,6 +111,9 @@ function lock(cb)
 end
 
 function show()
+  if root.elements.powermenu.open then return end;
+  root.elements.powermenu.open = true;
+
   -- Show splash screen and add panel to mouse screen
   for _,s in pairs(root.elements.powermenu.splash) do s.visible = true end
   if root.elements.powermenu.panel then
@@ -162,11 +169,15 @@ function hide()
   end;
   
   if root.elements.topbar then root.elements.topbar.show() end;
-  if mouse.screen then awful.screen.focus(mouse.screen) else awful.focus(screen[1]) end;
-  if mouse.current_client then awful.client.focus = mouse.current_client else awful.client.focus = client.get(screen[1])[1] end;
-  if root.elements.powermenu.lockcallback then root.elements.powermenu.lockcallback() end;
+  awful.screen.focus(mouse.screen or screen.primary);
   
+  if mouse.current_client and not awful.client.focus then 
+    awful.client.focus = mouse.current_client;
+  end;
+  
+  if root.elements.powermenu.lockcallback then root.elements.powermenu.lockcallback() end;
   root.elements.powermenu.lockcallback = nil;
+  root.elements.powermenu.open = false;
 end
 
 function make_button(i,t)
