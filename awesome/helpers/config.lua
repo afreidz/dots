@@ -166,6 +166,7 @@ return {
     suspend = "systemctl suspend",
     restart = "systemctl restart",
     shutdown = "systemctl poweroff",
+    scrot = "scrot '%Y-%m-%d-%h-%m-%s_scrot.png' -e 'mv $f ~/Scrot'",
   },
   notifications = {
     active = {},
