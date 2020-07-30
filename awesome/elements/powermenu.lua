@@ -228,8 +228,8 @@ function make_powermenu()
       visible = false,
       type = 'splash',
       widget = layout,
-      bg = config.colors.t,
       width = s.geometry.width,
+      bg = config.colors.b..'66',
       height = s.geometry.height,
     });
   end);

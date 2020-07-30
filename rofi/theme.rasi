@@ -18,19 +18,16 @@ configuration {
   spacing: 0;
 }
 
-#window {
-  border-radius: 7px;
-  background-color: #C9DDFC80;
-}
-
-#mainbox {
+mainbox {
   padding: 10px;
+  border-radius: 7px;
+  background-color: #C9DDFCB3;
 }
 
 inputbar {
   border: 00;
   children: [prompt,entry];
-  background-color: #C9DDFC80;
+  background-color: #C9DDFCB3;
   border-radius: 7;
 }
 
@@ -64,6 +61,6 @@ element {
 }
 
 element selected {
-  background-color: #C9DDFC80;
+  background-color: #C9DDFCB3;
   border-radius: 7;
 }

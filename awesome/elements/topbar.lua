@@ -131,13 +131,14 @@ function make_icon(i)
 
   local container = wibox.widget {
     layout = wibox.container.background,
+    bg = config.colors.t,
     fg = config.colors.w,
     icon
   };
 
-  container.update = function(t) icon.text = t end;
+  icon.update = function(t,c) icon.markup = '<span color="'..c..'">'..t..'</span>' end;
 
-  return container;
+  return icon;
 end
 
 function make_utilities(s)

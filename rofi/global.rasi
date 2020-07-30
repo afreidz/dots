@@ -1,10 +1,16 @@
 configuration {
   location: 0;
   width: 300px;
+  fullscreen: true;
 }
 
 @import "theme.rasi"
 
 window {
+  padding: 40%;
+  background-color: #33353866;
+}
+
+mainbox {
   width: 400px;
 }

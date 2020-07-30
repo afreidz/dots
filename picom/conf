@@ -3,20 +3,28 @@ glx-no-stencil = true;
 glx-copy-from-front = false;
 glx-no-rebind-pixmap = true;
 
-shadow = true;
+shadow = false;
 shadow-radius = 7;
 shadow-offset-x = -7;
 shadow-offset-y = -5;
 shadow-opacity = 0.3;
-shadow-exclude = [ "class_g = 'Rofi'" ];
+#shadow-exclude = [ "class_g = 'Rofi'" ];
 
 fading = true;
 fade-delta = 4;
 fade-in-step = 0.03;
 fade-out-step = 0.03;
 
+# transition-length: 300;
+# transition-pow-x: 0.5;
+# transition-pow-y: 0.5;
+# transition-pow-w: 0.5;
+# transition-pow-h: 0.5;
+# spawn-center: true;
+# size-transition: true;
+
 blur: {
-    method = "gaussian";
+    method = "dual_kawase";
     size = 20;
     deviation = 10.0;
 };

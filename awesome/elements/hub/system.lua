@@ -26,8 +26,8 @@ return function()
   local graph = wibox.container.background();
   graph.bg = config.colors.f;
   graph.shape = rounded();
-  graph.forced_height = 250;
-  graph.forced_width = config.hub.w - config.hub.nw - (config.global.m*4);
+  graph.forced_height = 200;
+  graph.forced_width = config.hub.w - config.hub.nw - (config.global.m*2);
   graph.widget = wibox.widget.base.empty_widget();
 
   local scale = wibox.layout.align.vertical();
@@ -203,22 +203,9 @@ return function()
         },
         close
       },
-      {
-        layout = wibox.container.place,
-        valign = "top",
-        halign = "center",
-        graph,
-      },
-      {
-        layout = wibox.container.margin,
-        margins = config.global.m,
-        pac,
-      },
-      {
-        layout = wibox.container.margin,
-        left = config.global.m, right = config.global.m,
-        proc,
-      }
+      graph,
+      { layout = wibox.container.margin, top = config.global.m, bottom = config.global.m, pac },
+      proc
     }
   }
 
@@ -226,8 +213,8 @@ return function()
     local n = tonumber(o);
     ram_progress:set_value(n);
     ram_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
-    for _,i in pairs(root.elements.mem_icons) do 
-      if n >= 75 then i.fg = config.colors.x9 elseif n >= 50 then i.fg = config.colors.x11 else i.fg = config.colors.x10 end;
+    for _,i in pairs(root.elements.mem_icons) do
+      if n >= 75 then i.update(config.icons.mem, config.colors.x9) elseif n >= 50 then i.update(config.icons.mem, config.colors.x11) else i.update(config.icons.mem, config.colors.x10) end;
     end;
   end);
 
@@ -243,7 +230,7 @@ return function()
   end);
 
   awful.widget.watch(config.commands.proccmd, 5, function(w, o)
-    proc_text.text = o;
+    proc_text.text = o:gsub("^%s*(.-)%s*$", "%1");
   end);
 
   view.refresh = function()
@@ -251,10 +238,10 @@ return function()
       local n = tonumber(o);
       if n <= 0 then 
         pac_value.text = 'none available';
-        for _,i in pairs(root.elements.pac_icons) do i.fg = config.colors.w end; 
+        for _,i in pairs(root.elements.pac_icons) do i.update(config.icons.pac, config.colors.w); end; 
       else 
         pac_value.text = o:gsub("^%s*(.-)%s*$", "%1")..' available' 
-        for _,i in pairs(root.elements.pac_icons) do i.fg = config.colors.x10 end;
+        for _,i in pairs(root.elements.pac_icons) do i.update(config.icons.pac, config.colors.x10); end;
       end
     end);
   end

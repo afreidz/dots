@@ -41,7 +41,7 @@ end);
 awful.keyboard.append_global_keybindings({
 	awful.key({ modkey }, "Return", function() awful.spawn(config.commands.terminal) end),
 	awful.key({ modkey }, "c", function() awful.spawn(config.commands.editor) end),
-	awful.key({ modkey }, "w", function() awful.spawn(config.commands.browser) end),
+	awful.key({ modkey }, "b", function() awful.spawn(config.commands.browser) end),
 	awful.key({ modkey }, "f", function() awful.spawn(config.commands.files) end),
 	awful.key({ modkey }, "space", function() awful.spawn(config.commands.rofi) end),
 	
@@ -93,7 +93,7 @@ awful.mouse.append_global_mousebindings({
 -- CLIENT KEYBINDS & BUTTONS
 client.connect_signal("request::default_keybindings", function(c)
 	awful.keyboard.append_client_keybindings({
-		awful.key({ modkey }, "q", function (c) c.kill(c) end),
+		awful.key({ modkey }, "w", function (c) c.kill(c) end),
 		awful.key({ modkey, "Control" }, "Right", function(c) c:move_to_screen(c.screen.index+1) end),
 		awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end),
 		awful.key({ modkey, "Control" }, "f", function(c) c.fullscreen = not c.fullscreen end),
@@ -166,6 +166,15 @@ ruled.client.connect_signal("request::rules", function()
 			size_hints_honor = true,
 		}
 	}
+	ruled.client.append_rule {
+		id = 'files',
+		rule = { class = 'Org.gnome.Nautilus' },
+		properties = { 
+			floating = true,
+			placement = awful.placement.centered,
+			size_hints_honor = true,
+		}
+	}
 end);
 ruled.notification.connect_signal('request::rules', function()
 	ruled.notification.append_rule {
@@ -174,9 +183,9 @@ ruled.notification.connect_signal('request::rules', function()
 	}
 end);
 
-client.connect_signal("manage", function(c) 
-	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end
-end);
+-- client.connect_signal("manage", function(c) 
+-- 	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end
+-- end);
 
 -- SPAWNS
 awful.spawn.with_shell("$HOME/.config/awesome/scripts/screen.sh");

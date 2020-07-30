@@ -138,7 +138,7 @@ return {
     btdevices = gears.filesystem.get_configuration_dir()..'scripts/btdevices.sh',
     btdevice = gears.filesystem.get_configuration_dir()..'scripts/btdevice.sh',
     idle = 'bash -c "xidlehook --not-when-audio --timer 500 \'echo lock\' \'\' --timer 120 \'echo suspend\' \'\'"',
-    proccmd = 'bash -c "ps -eo comm:43,%mem,%cpu --sort=-%cpu,-%mem | head -n 6"',
+    proccmd = 'bash -c "ps -eo comm:45,%mem,%cpu --sort=-%cpu,-%mem | head -n 6"',
     synccmd = 'bash -c "yay -Syy"',
     updatescmd = 'bash -c "yay -Sup | wc -l"',
     ismuted = 'bash -c "pamixer --get-mute | diff <(echo \"true\") -"',
