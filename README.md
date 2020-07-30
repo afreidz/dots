@@ -1,52 +1,18 @@
-# DOTS
-My "dotfiles" for awesomewm on Linux
+<p align="center"><b>AFreidz AwesomeWM Dotfiles</b></p>
+<p align="center"><img width="20%" src="https://github.com/afreidz/dots/raw/master/awesome/user.png"/></p>
 
-## DEPS USED IN THIS CONFIG
-- pkill
-- killall
-- pgrep
-- picom-rounded-corners (AUR)
-- xrandr
-- grep
-- cut
-- wc
-- pip
-- spotify-cli-linux (pip)
-- dunst
-- xidlehook
-- awk
-- print
-- imagemagik (convert, composite)
-- systemctl
-- awesomewm
-- rofi
-- date
-- pamixer
-- free
-- spicetify
-- nmcli
-- iwgetid
-- ip link
-- yay
-- bt-device
-- top
-- df
-- curl
-- dbus-send
-- ps
+### Details:
 
+<img width="400px" align="right" src="https://i.imgur.com/xpNt1Tp.png"/>
 
-## BINARIES USED IN THIS CONFIG
-- nitrogen
-- pavucontrol
-- lxappearance
-- urxvt
-- brave-beta-bin (AUR)
-- thunar
-- vscode
-- nm-connection-editor
++ **OS** BTW, I use Arch Linux
++ **WM** AwesomeWM v4.3.alkjdsflkadsf [AUR](https://aur.archlinux.org/packages/awesome-git/)
++ **Shell** ZSH with [OH-MY-ZSH](https://aur.archlinux.org/packages/oh-my-zsh-git/)
++ **ZSH Theme** Elessar [Github](https://github.com/fjpalacios/elessar-theme)
++ **Terminal** Rxvt (Unicode) [Pacman](https://www.archlinux.org/packages/?name=rxvt-unicode)
++ **File Manager** Nautilus [AUR](https://aur.archlinux.org/packages/nautilus-git/)
++ **GTK Theme** WhiteSur [GNOME-LOOK](https://www.gnome-look.org/p/1403328/)
++ **Icons** Reversal-Blue [GNOME-LOOK](https://www.gnome-look.org/s/Gnome/p/1340791)
++ **Launcher** Rofi [Pacman](https://wiki.archlinux.org/index.php/Rofi)
++ **Browser** Brave [AUR](https://aur.archlinux.org/packages/brave-bin/)
 
-
-## FONTS USED IN THIS CONFIG
-- Material Design Icons Desktop (https://github.com/Templarian/MaterialDesign-Font)
-- SF Pro Font (AUR: ttf-yosemite-san-francisco-font-git)
