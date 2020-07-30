@@ -1,4 +1,4 @@
-#! usr/bin/env bash
+#! /usr/bin/env bash
 REQUIRED_DEPS="yay -S \
 w3m \
 zsh \
