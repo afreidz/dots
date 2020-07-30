@@ -47,7 +47,7 @@ I have tried to automate some of the installation process into a bash script.  R
 
 You can run the setup script with
 
-```bash ~/.config/awesome/scripts/setup.sh```
+```bash ~/.config/awesome/scripts/install.sh```
 
 ### What next?
 
