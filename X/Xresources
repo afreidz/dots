@@ -44,5 +44,6 @@ URxvt.internalBorder: 60
 URxvt.depth: 24
 URxvt.clipboard.autocopy: true
 URxvt.keysym.Control-Shift-V: perl:pasta:paste
+URxvt.keysym.Control-l: command:\033c
 URxvt.perl-ext-common: selection-to-clipboard,pasta
 URxvt.font: xft:OperatorMonoLig:size=12:weight=bold,xft:MaterialDesignIconsDesktop:size=12

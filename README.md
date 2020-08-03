@@ -97,7 +97,7 @@ Other things:
 
   <img width="49%" align="center" src="https://i.imgur.com/xlmVZbI.png"/>
   <img width="49%" align="center" src="https://i.imgur.com/9DhRdAE.png"/>
-  
+
   <img width="49%" align="center" src="https://i.imgur.com/AdFFpkr.png"/>
   <img width="49%" align="center" src="https://i.imgur.com/ERW6GwT.png"/>
 </p>
