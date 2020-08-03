@@ -189,6 +189,57 @@ return function()
     proc_text;
   }
 
+  local bat = nil;
+  local bat_value = nil;
+  local bat_progress = nil;
+  if config.topbar.utilities.bat then
+    bat = wibox.container.background();
+    bat.bg = config.colors.f;
+    bat.shape = rounded();
+
+    bat_progress = wibox.widget.progressbar();
+    bat_progress.background_color = config.colors.b..'26';
+    bat_progress.color = config.colors.x10;
+    bat_progress.shape = rounded();
+    bat_progress.max_value = 100;
+    bat_progress.value = 0;
+
+    bat_value = wibox.widget.textbox();
+    bat_value.font = config.fonts.txxlb;
+    bat_value.align = "center";
+    bat_value.valign = "center";
+    bat_value.visible = false;
+    bat_value.opacity = 0.5;
+
+    bat:connect_signal('mouse::enter', function() bat_value.visible = true end);
+    bat:connect_signal('mouse::leave', function() bat_value.visible = false end);
+
+    bat:setup {
+      layout = wibox.layout.fixed.vertical,
+      {
+        layout = wibox.container.margin,
+        margins = config.global.m,
+        {
+          font = config.fonts.tlb,
+          text = "Battery",
+          widget = wibox.widget.textbox,
+        }
+      },
+      {
+        layout = wibox.layout.stack,
+        {
+          layout = wibox.container.margin,
+          left = config.global.m,
+          right = config.global.m,
+          bottom = config.global.m,
+          forced_height = 60,
+          bat_progress,
+        },
+        bat_value,
+      }
+    }
+  end
+
   view:setup {
     layout = wibox.container.background,
     fg = config.colors.b,
@@ -203,9 +254,10 @@ return function()
         },
         close
       },
+      { layout = wibox.container.margin, bottom = config.global.m, bat },
       graph,
       { layout = wibox.container.margin, top = config.global.m, bottom = config.global.m, pac },
-      proc
+      proc,
     }
   }
 
@@ -214,7 +266,9 @@ return function()
     ram_progress:set_value(n);
     ram_value.text = o:gsub("^%s*(.-)%s*$", "%1").."%";
     for _,i in pairs(root.elements.mem_icons) do
-      if n >= 75 then i.update(config.icons.mem, config.colors.x9) elseif n >= 50 then i.update(config.icons.mem, config.colors.x11) else i.update(config.icons.mem, config.colors.x10) end;
+      if n >= 75 then i.update(config.icons.mem, config.colors.x9) 
+      elseif n >= 50 then i.update(config.icons.mem, config.colors.x11) 
+      else i.update(config.icons.mem, config.colors.x10) end;
     end;
   end);
 
@@ -233,6 +287,26 @@ return function()
     proc_text.text = o:gsub("^%s*(.-)%s*$", "%1");
   end);
 
+  if config.topbar.utilities.bat then
+    awful.widget.watch(config.commands.batcmd, 5, function(w, o)
+      local n = tonumber(o);
+      if bat_progress then bat_progress:set_value(n) end;
+      if bat_value then bat_value.text = tostring(n)..'%' end;
+      for _,i in pairs(root.elements.bat_icons) do
+        if n <= 10 then i.update(config.icons.bat10, config.colors.x9)
+        elseif n <= 20 then i.update(config.icons.bat20, config.colors.x9)
+        elseif n <= 30 then i.update(config.icons.bat30, config.colors.x9)
+        elseif n <= 40 then i.update(config.icons.bat40, config.colors.x11)
+        elseif n <= 50 then i.update(config.icons.bat50, config.colors.x11)
+        elseif n <= 60 then i.update(config.icons.bat60, config.colors.x11)
+        elseif n <= 70 then i.update(config.icons.bat70, config.colors.w)
+        elseif n <= 80 then i.update(config.icons.bat80, config.colors.w)
+        elseif n <= 90 then i.update(config.icons.bat90, config.colors.w)
+        else i.update(config.icons.bat, config.colors.w) end
+      end
+    end);
+  end
+
   view.refresh = function()
     awful.spawn.easy_async_with_shell(config.commands.updatescmd, function(o,e)
       local n = tonumber(o);
@@ -244,6 +318,14 @@ return function()
         for _,i in pairs(root.elements.pac_icons) do i.update(config.icons.pac, config.colors.x10); end;
       end
     end);
+
+    if config.topbar.utilities.bat then
+      awful.spawn.easy_async(config.commands.batcmd, function(o)
+        local n = tonumber(o);
+        if bat_progress then bat_progress:set_value(n) end;
+        if bat_value then bat_value.text = tostring(n)..'%' end;
+      end);
+    end
   end
 
   view.refresh();

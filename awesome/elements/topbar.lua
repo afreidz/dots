@@ -201,19 +201,19 @@ function make_utilities(s)
     root.elements.pac_icons[s.index] = make_icon(config.icons.pac);
     layout:add(root.elements.pac_icons[s.index]);
   end
-
-  if config.topbar.utilities.bat then
-    root.elements.bat_icons = root.elements.bat_icons or {};
-    root.elements.bat_icons[s.index] = make_icon(config.icons.bat);
-    layout:add(root.elements.bat_icons[s.index]);
-  end
-
+  
   if config.topbar.utilities.note then
     root.elements.note_icons = root.elements.note_icons or {};
     root.elements.note_icons[s.index] = make_icon(config.icons.note);
     layout:add(root.elements.note_icons[s.index]);
   end
 
+  if config.topbar.utilities.bat then
+    root.elements.bat_icons = root.elements.bat_icons or {};
+    root.elements.bat_icons[s.index] = make_icon(config.icons.bat);
+    layout:add(root.elements.bat_icons[s.index]);
+  end
+  
   utilities:struts({ top = config.topbar.h + config.global.m });
   utilities.y = config.global.m;
   utilities.x = ((s.workarea.width / 2) - (uw/2)) + s.workarea.x;

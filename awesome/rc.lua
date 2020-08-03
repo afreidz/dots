@@ -140,6 +140,16 @@ ruled.client.connect_signal("request::rules", function()
 		}
 	}
 	ruled.client.append_rule {
+		id = 'browser',
+		rule = { role = 'browser' },
+		properties = { 
+			floating = false,
+			fullscreen = false,
+			maximized = false,
+			size_hints_honor = false,
+		}
+	}
+	ruled.client.append_rule {
 		id = 'files',
 		rule = { role = 'GtkFileChooserDialog' },
 		properties = { 

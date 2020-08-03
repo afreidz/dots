@@ -75,6 +75,7 @@ return {
       pac = true,
       mem = true,
       note = true,
+      bat = true,
     },
   },
   tagswitcher= {
@@ -122,6 +123,16 @@ return {
     restart = '󰜉',
     logout = '󰗽',
     suspend = '󰤄',
+    bat10 = '󰁺',
+    bat20 = '󰁻',
+    bat30 = '󰁼',
+    bat40 = '󰁽',
+    bat50 = '󰁾',
+    bat60 = '󰁿',
+    bat70 = '󰂀',
+    bat80 = '󰂁',
+    bat90 = '󰂂',
+    bat = '󰁹',
   },
   commands = {
     getbrightness = gears.filesystem.get_configuration_dir()..'scripts/getbrightness.sh',
@@ -169,6 +180,7 @@ return {
     scrot = "scrot '%Y-%m-%d-%h-%m-%s_scrot.png' -e 'mv $f ~/Scrot'",
     audiosrc = "pamixer --list-sinks | awk -F\\\" '{print $4}'",
     micsrc = "pamixer --list-sources | grep $(pacmd list-sources | grep '*' | awk '{print $3}' ) | awk -F\\\" '{print $4}'",
+    batcmd = 'bash -c "acpi -V | grep -m 1 \'Battery 1\' | awk -F, \'{print $2}\' | sed \'s/%//\'"'
   },
   notifications = {
     active = {},
