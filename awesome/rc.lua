@@ -93,7 +93,7 @@ awful.mouse.append_global_mousebindings({
 -- CLIENT KEYBINDS & BUTTONS
 client.connect_signal("request::default_keybindings", function(c)
 	awful.keyboard.append_client_keybindings({
-		awful.key({ modkey }, "w", function (c) c.kill(c) end),
+		awful.key({ modkey }, "q", function (c) c.kill(c) end),
 		awful.key({ modkey, "Control" }, "Right", function(c) c:move_to_screen(c.screen.index+1) end),
 		awful.key({ modkey, "Control" }, "Left", function(c) c:move_to_screen(c.screen.index-1) end),
 		awful.key({ modkey, "Control" }, "f", function(c) c.fullscreen = not c.fullscreen end),
@@ -192,10 +192,6 @@ ruled.notification.connect_signal('request::rules', function()
 		properties = { urgency = 'low' }
 	}
 end);
-
--- client.connect_signal("manage", function(c) 
--- 	c.shape = function(cr,w,h) gears.shape.rounded_rect(cr,w,h,5) end
--- end);
 
 -- SPAWNS
 awful.spawn.with_shell("$HOME/.config/awesome/scripts/screen.sh");
