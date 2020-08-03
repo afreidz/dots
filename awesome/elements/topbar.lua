@@ -253,7 +253,7 @@ function make_taglist(s)
       {
         id = "text_role",
         widget = wibox.widget.textbox,
-        font = config.fonts.im,
+        font = config.fonts.tmb,
       }
     }
   });

@@ -35,10 +35,10 @@ return {
     x15 = xrdb.color15,
   },
   fonts = {
-    is = "Material Design Icons Desktop:size=12",
-    im = "Material Design Icons Desktop:size=14",
-    il = "Material Design Icons Desktop:size=20",
-    ixxl = "Material Design Icons Desktop:size=100",
+    is = "Material Design Icons Desktop 12",
+    im = "Material Design Icons Desktop 14",
+    il = "Material Design Icons Desktop 20",
+    ixxl = "Material Design Icons Desktop 100",
     ts = "SF Pro Rounded 9",
     tm = "SF Pro Rounded 10",
     tl = "SF Pro Rounded 12",
@@ -54,7 +54,7 @@ return {
     mll = "Operator Mono Lig Light 12",
     m = "Operator Mono Lig",
     t = "SF Pro Rounded",
-    i = "Material Design Icons Desktop:size=",
+    i = "Material Design Icons Desktop ",
   },
   powermenu = {
     w = 500,
@@ -75,7 +75,7 @@ return {
       pac = true,
       mem = true,
       note = true,
-      bat = true,
+      bat = false,
     },
   },
   tagswitcher= {

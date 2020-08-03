@@ -27,12 +27,11 @@ tag.connect_signal('request::default_layouts', function()
 end);
 
 -- TAGS/LAYOUTS
-local tags = require('helpers.tags');
 screen.connect_signal('request::desktop_decoration', function(s)
 	if s.index == 1 then
-		awful.tag({ tags[1] }, s, awful.layout.layouts[1]);
+		awful.tag({1,2,3}, s, awful.layout.layouts[1]);
 	else
-		awful.tag({ tags[2] }, s, awful.layout.layouts[1]);
+		awful.tag({4,5,6}, s, awful.layout.layouts[1]);
 	end
 	s.tags[1]:view_only();
 end);
@@ -186,11 +185,14 @@ ruled.client.connect_signal("request::rules", function()
 		}
 	}
 end);
+
 ruled.notification.connect_signal('request::rules', function()
+	
 	ruled.notification.append_rule {
-		rule = { app_name = 'Brave' },
-		properties = { urgency = 'low' }
+		rule = { urgency = 'normal' },
+		properties = { urgency = 'low', timeout = 0 }
 	}
+
 end);
 
 -- SPAWNS

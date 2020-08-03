@@ -12,7 +12,6 @@ local b = config.colors.b;
 local f = config.colors.f;
 local f2 = config.colors.f;
 local h = config.tagswitcher.h;
-local tags = require('helpers.tags');
 
 function toggle_tag_switcher()
   awful.screen.connect_for_each_screen(function(screen)
@@ -24,7 +23,8 @@ function add_new_tag()
   local total = root.tags();
 
   if(#total >= 10) then return end;
-  awful.tag.add(tags[#total+1], {
+  
+  awful.tag.add(#total+1, {
     screen = awful.screen.focused(),
     layout = awful.screen.focused().selected_tag.layout,
   });
@@ -84,7 +84,7 @@ function make_taglist(s)
         {
           id = "text_role",
           widget = wibox.widget.textbox,
-          font = "MaterialDesignIconsDesktop 40",
+          font = config.fonts.t.." Bold 30",
           align = 'center',
           valign = 'center',
         }
