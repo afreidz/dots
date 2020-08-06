@@ -7,11 +7,13 @@ xclip \
 scrot \
 unzip \
 bluez \
+python \
 openssh \
 pamixer \
 neofetch \
 xidlehook \
 pulseaudio \
+python-dbus\
 awesome-git \
 xorg-server \
 imagemagick \
@@ -38,11 +40,14 @@ nm-connection-editor \
 
 OPTIONAL_BINS="yay -S \
 spotify \
+alacritty \
 font-manager \
 slack-desktop \
 visual-studio-code-bin \
 --answerclean All \
 --nodiffmenu"
+
+OPTIONAL_DEPS_PYTHON="pip install spotify-cli-linux --user"
 
 FETCH_FONTS="$HOME/.config/awesome/scripts/fonts.sh"
 
@@ -62,15 +67,8 @@ esac
 echo ""
 read -p "Do you want to install optional binary programs (y/n)?" opt_bins_choice
 case "$opt_bins_choice" in 
-  y|Y ) $($OPTIONAL_BINS);;
+  y|Y ) $($OPTIONAL_BINS && $OPTIONAL_DEPS_PYTHON);;
   n|N ) echo "skipping optional binary programs";;
-  * ) echo "invalid! quitting"; exit 1;;
-esac
-echo ""
-read -p "Do you want to install the fonts (y/n)?" fonts_choice
-case "$fonts_choice" in 
-  y|Y ) $(sudo bash $FETCH_FONTS);;
-  n|N ) echo "skipping fonts";;
   * ) echo "invalid! quitting"; exit 1;;
 esac
 echo "done"

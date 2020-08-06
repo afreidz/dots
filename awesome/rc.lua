@@ -186,13 +186,12 @@ ruled.client.connect_signal("request::rules", function()
 	}
 end);
 
+-- NOTIFICATIONS
 ruled.notification.connect_signal('request::rules', function()
-	
 	ruled.notification.append_rule {
-		rule = { urgency = 'normal' },
-		properties = { urgency = 'low', timeout = 0 }
+		rule = {},
+		properties = { timeout = 0 }
 	}
-
 end);
 
 -- SPAWNS

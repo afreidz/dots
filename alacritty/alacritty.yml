@@ -1,0 +1,45 @@
+window:
+  padding:
+    x: 50
+    y: 50
+
+# Font configuration 
+font:
+  normal:
+    family: "Material Design Icons Desktop"
+    family: "Operator Mono Lig Book"
+  bold:
+    family: "Material Design Icons Desktop"
+    family: "Operator Mono Lig"
+  italic:
+    family: "Material Design Icons Desktop"
+    family: "Operator Mono Lig Book Italic"
+  size: 14.0
+
+colors:
+  # Default colors
+  primary:
+    background: '0x00141d'
+    foreground: '0xfefefe'
+
+  # Normal colors
+  normal:
+    black:   '0x00141d'
+    red:     '0xe00233'
+    green:   '0x72d266'
+    yellow:  '0xfb9e3c'
+    blue:    '0x016ee3'
+    magenta: '0xe00267'
+    cyan:    '0x733881'
+    white:   '0xdfe5ec'
+
+  # Bright colors
+  bright:
+    black:   '0x16262e'
+    red:     '0xf90239'
+    green:   '0x7df26f'
+    yellow:  '0xfdc400'
+    blue:    '0x017afc'
+    magenta: '0xf90273'
+    cyan:    '0x803e8f'
+    white:   '0xffffff'

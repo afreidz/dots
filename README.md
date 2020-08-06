@@ -43,7 +43,11 @@ I have tried to automate some of the installation process into a bash script.  R
 1. **Required Dependencies** this is awesomewm, picom, and all the CLI packages this config makes use of.
 2. **Required Binary Programs** there are a few lightweight programs used in this config to handle some things I have yet to script.  Some of these may not be TRULY required, but YMMV if you choose to skip this
 3. **Optional Binary Programs** these are just a few heavier binary programs that I prefer to use daily.  Some/all of them may have awesomewm keybinds, so skipping this could cause a few errors when executing the key combos.
-4. **Fonts** there is a system-wide font and an icon font I use in this config.  I had some issues finding working AUR repos for some of them and thus have decided to `curl` a few ttf files.  This will also assume the url to these files still exists.  Don't dog me if they fall off the internetz :)
+4. **Fonts** there is a system-wide font and an icon font I use in this config.  I had decided that installing them programattically would be non-trivial and therefore I will assume you can install them on your system yourself.
+  - [SF Pro](https://developerjillur.me/wp-content/resource/fonts/sfns-ttf.zip)
+  - [Material Design Icons Desktop](https://github.com/Templarian/MaterialDesign-Font)
+  - Operator Mono Lig (licensed font, either you can obtain it, or change the config to something different)
+
 
 You can run the setup script with
 

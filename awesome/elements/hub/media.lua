@@ -7,188 +7,7 @@ local config = require('helpers.config');
 local beautiful = require('beautiful');
 local rounded = require('helpers.rounded');
 local xrdb = beautiful.xresources.get_current_theme();
-
-function make_spotify(view)
-  local spot = wibox.container.background()
-  spot.bg = config.colors.f;
-  spot.shape = rounded();
-  
-  local album_art = wibox.widget.imagebox();
-  album_art.resize = true;
-  album_art.shape = rounded();
-  album_art.clip_shape = rounded();
-
-  local no_album = wibox.widget.textbox(config.icons.spot);
-  no_album.font = config.fonts.i..' 50';
-  no_album:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.raise_or_spawn(config.commands.spotify) end)
-  ));
-
-  local artist = wibox.widget.textbox();
-  local song = wibox.widget.textbox();
-  local album = wibox.widget.textbox();
-  song.font = config.fonts.tlb;
-  song.forced_height = 20;
-  artist.font = config.fonts.tmb;
-  artist.forced_height = 20;
-  album.font = config.fonts.tml;
-  album.forced_height = 20;
-
-  local play_pause_action = config.commands.play;
-
-  local spotify_icon = wibox.widget.textbox(config.icons.spot);
-  spotify_icon.font = config.fonts.tlb;
-  spotify_icon:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.raise_or_spawn(config.commands.spotify) end)
-  ));
-
-  local play = wibox.widget.textbox();
-  play.font = config.fonts.txxlb;
-  play:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.easy_async_with_shell(play_pause_action, view.refresh) end)
-  ));
-  play:connect_signal('mouse::enter', function()
-    play.markup = '<span foreground="'..config.colors.x4..'">'..play.text..'</span>';
-  end);
-  play:connect_signal('mouse::leave', function()
-    play.text = play.text;
-  end);
-
-  local next = wibox.widget.textbox(config.icons.next);
-  next.font = config.fonts.txxlb;
-  next:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.easy_async_with_shell(config.commands.next, view.refresh) end)
-  ));
-  next:connect_signal('mouse::enter', function()
-    next.markup = '<span foreground="'..config.colors.x4..'">'..next.text..'</span>';
-  end);
-  next:connect_signal('mouse::leave', function()
-    next.text = next.text;
-  end);
-
-  local prev = wibox.widget.textbox(config.icons.prev);
-  prev.font = config.fonts.txxlb;
-  prev:buttons(gears.table.join(
-    awful.button({}, 1, function() awful.spawn.easy_async_with_shell(config.commands.prev, view.refresh) end)
-  ));
-  prev:connect_signal('mouse::enter', function()
-    prev.markup = '<span foreground="'..config.colors.x4..'">'..prev.text..'</span>';
-  end);
-  prev:connect_signal('mouse::leave', function()
-    prev.text = prev.text;
-  end);
-
-  local controls = wibox.widget {
-    layout = wibox.container.margin,
-    margins = config.global.m,
-    {
-      layout = wibox.layout.flex.horizontal,
-      {
-        layout = wibox.container.place,
-        halign = 'right',
-        valign = 'center',
-        prev
-      },
-      {
-        layout = wibox.container.place,
-        halign = 'center',
-        valign = 'center',
-        play
-      },
-      {
-        layout = wibox.container.place,
-        halign = 'left',
-        valign = 'center',
-        next
-      },
-    }
-  };
-
-  awful.spawn.easy_async_with_shell(config.commands.song, function(o,e)
-    if e ~= '' then
-      song.text = "Nothing"
-      artist.text = "Nobody";
-      album.text = "";
-      controls.visible = false;
-      return
-    end 
-    artist.text = o;
-    awful.spawn.easy_async_with_shell(config.commands.isplaying, function(o,e,a,c)
-      if c == 0 then 
-        play.text = config.icons.pause;
-        play_pause_action = config.commands.pause;
-      else
-        play.text = config.icons.play;
-        play_pause_action = config.commands.play;
-      end 
-    end);
-    awful.spawn.easy_async_with_shell(config.commands.song, function(o) song.text = o end);
-    awful.spawn.easy_async_with_shell(config.commands.album, function(o) album.text = o end);
-    awful.spawn.easy_async_with_shell(config.commands.art, function(o)
-      album_art:set_image(gears.surface.load_uncached(o:gsub("^%s*(.-)%s*$", "%1"))); 
-    end);
-  end);
-
-  
-
-
-  spot:setup {
-    layout = wibox.layout.align.vertical,
-    {
-      layout = wibox.container.margin,
-      margins = config.global.m,
-      {
-        layout = wibox.layout.align.horizontal,
-        {
-          widget = wibox.widget.textbox,
-          text = 'Now Playing',
-          font = config.fonts.tlb,
-        },
-        nil,
-        spotify_icon,
-      }
-    },
-    {
-      layout = wibox.container.margin,
-      left = config.global.m,
-      right = config.global.m,
-      bottom = config.global.m,
-      {
-        layout = wibox.layout.align.horizontal,
-        {
-          layout = wibox.container.background,
-          shape = rounded(),
-          forced_width = 100,
-          forced_height = 100,
-          fg = config.colors.b..'40',
-          bg = config.colors.b..'40',
-          {
-            layout = wibox.layout.stack,
-            { layout = wibox.container.place, valign = "center", no_album },
-            album_art,
-          }
-        },
-        {
-          layout = wibox.container.margin,
-          margins = config.global.m,
-          {
-            layout = wibox.layout.fixed.vertical,
-            { layout = wibox.container.background, song },
-            { layout = wibox.container.background, artist },
-            { layout = wibox.container.background, album },
-          }
-        }
-      }
-    },
-    controls
-  }
-  
-  return wibox.widget {
-    layout = wibox.container.margin,
-    top = config.global.m,
-    spot
-  };
-end
+local saved_spotify_state = nil;
 
 return function()
   local view = wibox.container.margin();
@@ -236,26 +55,149 @@ return function()
   local mute = wibox.widget.textbox();
   mute.font = config.fonts.tlb;
 
-  local layout = wibox.layout.flex.horizontal();
-  layout:add(make_spotify(view));
+  local album_icon = wibox.widget.imagebox();
+  album_icon.clip_shape = rounded();
+  album_icon.forced_height = 140;
+  album_icon.forced_width = 140;
+  album_icon.resize = true;
+
+  local spotify_icon = wibox.widget {
+    layout = wibox.container.background,
+    bg = config.colors.w,
+    forced_height = 140,
+    forced_width = 140,
+    shape = rounded(),
+    {
+      layout = wibox.container.place,
+      valign = "center",
+      halign = "center",
+      {
+        widget = wibox.widget.textbox,
+        font = config.fonts.i..' 70',
+        text = config.icons.spot,
+      }
+    }
+  };
+
+  local icon = spotify_icon;
+  
+  local spotify_title = wibox.widget.textbox('Nothing playing');
+  local spotify_message = wibox.widget.textbox('');
+  spotify_message.font = config.fonts.tml;
+  spotify_title.font = config.fonts.tlb;
+
+  local play = wibox.widget.textbox();
+  play.font = config.fonts.txxlb;
+  play.text = config.icons.play;
+  play:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      awful.spawn.with_shell(config.commands.play);
+    end)
+  ));
+  play:connect_signal('mouse::enter', function()
+    play.markup = '<span foreground="'..config.colors.x4..'">'..play.text..'</span>';
+  end);
+  play:connect_signal('mouse::leave', function()
+    play.text = play.text;
+  end);
+
+  local next = wibox.widget.textbox(config.icons.next);
+  next.font = config.fonts.txxlb;
+  next:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      awful.spawn.with_shell(config.commands.next);
+    end)
+  ));
+  next:connect_signal('mouse::enter', function()
+    next.markup = '<span foreground="'..config.colors.x4..'">'..next.text..'</span>';
+  end);
+  next:connect_signal('mouse::leave', function()
+    next.text = next.text;
+  end);
+
+  local prev = wibox.widget.textbox(config.icons.prev);
+  prev.font = config.fonts.txxlb;
+  prev:buttons(gears.table.join(
+    awful.button({}, 1, function() 
+      awful.spawn.with_shell(config.commands.prev);
+    end)
+  ));
+  prev:connect_signal('mouse::enter', function()
+    prev.markup = '<span foreground="'..config.colors.x4..'">'..prev.text..'</span>';
+  end);
+  prev:connect_signal('mouse::leave', function()
+    prev.text = prev.text;
+  end);
+
+  local spotify = wibox.layout.align.horizontal();
+  spotify.third = nil;
+  spotify.first = icon;
+  spotify.second = wibox.widget {
+    layout = wibox.layout.align.vertical,
+    {
+      layout = wibox.container.margin,
+      left = config.global.m,
+      {
+        layout = wibox.layout.fixed.vertical,
+        { layout = wibox.container.constraint, spotify_title },
+        { layout = wibox.container.constraint, spotify_message },
+      }
+    },
+    nil,
+    {
+      layout = wibox.layout.flex.horizontal,
+      { layout = wibox.container.place, halign = 'right', prev },
+      { layout = wibox.container.place, play },
+      { layout = wibox.container.place, halign = 'left', next },
+    }
+  };
+
+  awful.spawn.easy_async_with_shell(config.commands.song, function(o)
+    spotify_title.text = o:gsub("^%s*(.-)%s*$", "%1");
+  end);
+
+  awful.spawn.easy_async_with_shell(config.commands.artist, function(o)
+    spotify_message.text = o:gsub("^%s*(.-)%s*$", "%1");
+  end);
+
+  awful.widget.watch(config.commands.spotify_state, 1, function(w,o,e,r,c)
+    local cmdstate = {}
+    o:gsub("[^\r\n]+", function(m) table.insert(cmdstate, m) end);
+    local i = gears.table.find_first_key(naughty.active, function(k,v) return v.app_name == 'Spotify' end);
+    local spotify_state = naughty.active[i];
+    
+    if spotify_state then saved_spotify_state = spotify_state end;
+    if not spotify_state and saved_spotify_state then spotify_state = saved_spotify_state end;
+
+    play.text = (cmdstate[1] == 'not playing') and config.icons.play or config.icons.pause;
+    
+    if spotify_state and spotify_title.text ~= spotify_state.title then
+      album_icon:set_image(gears.surface.load_silently(spotify_state.icon));
+      spotify.first = album_icon;
+      spotify_title.text = spotify_state.title;
+      spotify_message.text = spotify_state.message;
+    elseif not spotify_state then
+      spotify.first = spotify_icon;
+      spotify_title.text = cmdstate[2] or 'Nothing Playing';
+      spotify_message.text = cmdstate[3] or '';
+    end;    
+  end);
 
   view.refresh = function()
     local temp_vol = vol_slider.value;
-
-    layout:set(1, make_spotify(view));
-
+    
     awful.spawn.easy_async_with_shell(config.commands.audiosrc, function(o)
-      vol_footer.markup = 'Output: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>';
+      if o then vol_footer.markup = 'Output: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>' end;
     end);
-
+    
     awful.spawn.easy_async_with_shell(config.commands.micsrc, function(o,e)
-      mic_footer.markup = 'Input: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>';
+      if o then mic_footer.markup = 'Input: <span font="'..config.fonts.tsb..'">'..o:gsub("^%s*(.-)%s*$", "%1")..'</span>' end;
     end);
     
     awful.spawn.easy_async_with_shell(config.commands.vol, function(o) 
       vol_slider:set_value(tonumber(o)); 
     end);
-
+    
     awful.spawn.easy_async_with_shell(config.commands.ismuted, function(o,e,r,c) 
       if c == 0 then 
         vol_slider.bar_active_color = config.colors.b..'26';
@@ -268,18 +210,19 @@ return function()
       end;
     end);
   end
-
+  
   mute:buttons(gears.table.join(
     awful.button({}, 1, function()
       awful.spawn.easy_async_with_shell(config.commands.mute, view.refresh);
     end)
   ));
-
+  
   view:setup {
     layout = wibox.container.background,
     fg = config.colors.b,
     {
       layout = wibox.layout.fixed.vertical,
+      spacing = config.global.m,
       {
         layout = wibox.layout.align.horizontal,
         nil,
@@ -328,7 +271,17 @@ return function()
           }
         }
       },
-      layout
+      {
+        layout = wibox.container.background,
+        bg = config.colors.f,
+        shape = rounded(),
+        forced_width = (config.hub.w - config.hub.nw) - (config.global.m*2),
+        {
+          layout = wibox.container.margin,
+          margins = config.global.m,
+          spotify
+        }
+      }
     }
   }
 

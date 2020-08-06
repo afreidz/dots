@@ -1,8 +1,9 @@
 local gears = require('gears');
+local awful = require('awful');
 local beautiful = require('beautiful');
 local xrdb = beautiful.xresources.get_current_theme();
 
-return {
+local config = {
   global = {
     m = 10,
     r = 7,
@@ -39,15 +40,15 @@ return {
     im = "Material Design Icons Desktop 14",
     il = "Material Design Icons Desktop 20",
     ixxl = "Material Design Icons Desktop 100",
-    ts = "SF Pro Rounded 9",
-    tm = "SF Pro Rounded 10",
-    tl = "SF Pro Rounded 12",
-    tsl = "SF Pro Rounded Light 9",
-    tml = "SF Pro Rounded Light 10",
-    tll = "SF Pro Rounded Light 12",
-    tsb = "SF Pro Rounded Semibold 9",
-    tmb = "SF Pro Rounded Semibold 10",
-    tlb = "SF Pro Rounded Semibold 12",
+    ts = "SF Pro Display 9",
+    tm = "SF Pro Display 10",
+    tl = "SF Pro Display 12",
+    tsl = "SF Pro Display Light 9",
+    tml = "SF Pro Display Light 10",
+    tll = "SF Pro Display Light 12",
+    tsb = "SF Pro Display Semibold 9",
+    tmb = "SF Pro Display Semibold 10",
+    tlb = "SF Pro Display Semibold 12",
     txlb = "SF Pro Rounded Semibold 15",
     txxlb = "SF Pro Rounded Semibold 25",
     mlb = "Operator Mono Lig Bold 12",
@@ -148,6 +149,7 @@ return {
     btup = gears.filesystem.get_configuration_dir()..'scripts/btup.sh',
     btdevices = gears.filesystem.get_configuration_dir()..'scripts/btdevices.sh',
     btdevice = gears.filesystem.get_configuration_dir()..'scripts/btdevice.sh',
+    spotify_state = gears.filesystem.get_configuration_dir()..'scripts/spotify.sh',
     idle = 'bash -c "xidlehook --not-when-audio --timer 500 \'echo lock\' \'\' --timer 120 \'echo suspend\' \'\'"',
     proccmd = 'bash -c "ps -eo comm:45,%mem,%cpu --sort=-%cpu,-%mem | head -n 6"',
     synccmd = 'bash -c "yay -Syy"',
@@ -167,12 +169,11 @@ return {
     rofi2 = "rofi -show drun -theme launcher",
     software = "pamac-manager",
     pause = "spotifycli --pause",
-    play = "spotifycli --play",
+    play = "spotifycli --playpause",
     next = "spotifycli --next",
     prev = "spotifycli --prev",
     artist = "spotifycli --artist",
     song = "spotifycli --song",
-    album = "spotifycli --album",
     isplaying = 'bash -c "spotifycli --playbackstatus | diff <(echo \"▶\") -"',
     suspend = "systemctl suspend",
     restart = "systemctl reboot",
@@ -183,10 +184,18 @@ return {
     batcmd = 'bash -c "acpi -V | grep -m 1 \'Battery 1\' | awk -F, \'{print $2}\' | sed \'s/%//\'"'
   },
   notifications = {
-    active = {},
     w = 200,
   },
   display = {
     sw = 120,
   },
+  media = {
+    nowplaying = nil,
+  }
 };
+
+awful.spawn.easy_async_with_shell('which alacritty', function(o,e,r,c)
+  if c == 0 then config.commands.terminal = 'alacritty' end;
+end);
+
+return config;
