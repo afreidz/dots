@@ -242,7 +242,7 @@ return function()
 
   view:setup {
     layout = wibox.container.background,
-    fg = config.colors.b,
+    fg = config.colors.xf,
     {
       layout = wibox.layout.fixed.vertical,
       {

@@ -236,7 +236,7 @@ function make_taglist(s)
     visible = false,
     type = "utility",
     bg = config.colors.f,
-    fg = config.colors.b,
+    fg = config.colors.xf,
     width = config.topbar.w,
     height = config.topbar.h,
   });

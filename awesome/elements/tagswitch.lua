@@ -7,12 +7,6 @@ local beautiful = require('beautiful');
 local xrdb = beautiful.xresources.get_current_theme();
 local config = require('helpers.config');
 
-local m = config.global.m;
-local b = config.colors.b;
-local f = config.colors.f;
-local f2 = config.colors.f;
-local h = config.tagswitcher.h;
-
 function toggle_tag_switcher()
   awful.screen.connect_for_each_screen(function(screen)
     screen.tagswitch.visible = not screen.tagswitch.visible;
@@ -31,7 +25,7 @@ function add_new_tag()
 
   local stags = awful.screen.focused().tags;
   local switcher = awful.screen.focused().tagswitch;
-  switcher.width = ((100+m) * (#stags+1)) + m;
+  switcher.width = ((100+config.global.m) * (#stags+1)) + config.global.m;
   switcher.x = switcher.x - 55;
 end
 
@@ -39,22 +33,22 @@ function delete_tag(t)
   t:delete();
   local stags = awful.screen.focused().tags;
   local switcher = awful.screen.focused().tagswitch;
-  switcher.width = ((100+m) * (#stags+1)) + m;
+  switcher.width = ((100+config.global.m) * (#stags+1)) + config.global.m;
   if(#stags == 1) then return end;
   switcher.x = switcher.x + 55;
 end
 
 function make_taglist(s)
-  local w = ((100+m) * (#s.tags+1)) + m;
+  local w = ((100+config.global.m) * (#s.tags+1)) + config.global.m;
   local container = wibox({
-    height = h,
+    height = config.tagswitcher.h,
     width = w,
     type = "toolbar",
     screen = s,
     ontop = true,
     visible = false,
-    bg = f,
-    fg = b,
+    bg = config.colors.f,
+    fg = config.colors.xf,
   });
 
   local buttons = gears.table.join(
@@ -73,11 +67,11 @@ function make_taglist(s)
     },
     widget_template = {
       layout = wibox.container.margin,
-      right = m,
+      right = config.global.m,
       {
         id = "background_role",
         layout = wibox.container.background,
-        bg = f2,
+        bg = config.colors.f,
         shape = rounded(),
         forced_width = 100,
         forced_height = 100,
@@ -93,7 +87,7 @@ function make_taglist(s)
   });
 
   local add = wibox.container.background();
-  add.bg = f2;
+  add.bg = config.colors.f;
   add.forced_height = 100;
   add.forced_width = 100;
   add.shape = rounded();
@@ -110,12 +104,12 @@ function make_taglist(s)
   }
 
   container.x = ((s.workarea.width / 2) - w/2) + s.workarea.x;
-  container.y = s.workarea.height - (h+m);
+  container.y = s.workarea.height - (config.tagswitcher.h+config.global.m);
   container.shape = rounded();
 
   container:setup {
     layout = wibox.container.margin,
-    top = m, bottom = m, left = m,
+    top = config.global.m, bottom = config.global.m, left = config.global.m,
     {
       layout = wibox.layout.fixed.horizontal,
       taglist,
